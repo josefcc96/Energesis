@@ -19,27 +19,6 @@ import threading
 import requests
 import json
 
-"""------------------------------------CONTROL DE PINES GPIO------------------------------------"""
-idc = [
-"030","031","032","033","034","035","037","080","081","082","083","084","085","087","088","089",
-"040","041","042","043","071","077","090","091","093","103","104","105","108","109","119","020",
-"022","023","024","025","026","027","028","029","036","038","049","060","062","063","094","095",
-"096","097","098"
-
-
-
-]
-
-numc = [
-"3135881855","3135927486","3135670333","3135646220","3135666599","3135691884","3135885660","3135658864",
-"3135884387","3135660270","3135664037","3135883144","3135658913","3135639957","3135899636","3135642438",
-"3135886941","3135647515","3135881890","3135884424","3135886942","3135886935","3135642457","3135674161",
-"3135647517","3135884425","3135639944","3135648787","3135886951","3135687177","3135687198","3135692052",
-"3135687137","3135901879","3135665323","3135885658","3135671662","3135638646","3135885651","3135691913",
-"3135666597","3135643699","3135883169","3135884384","3135648800","3135653823","3135691897","3135662813",
-"3135687183","3135647542","3135883161"
-]
-
 
 #Inicia la comunicación serial por el puerto ttyS0 a 38400
 #Con ls -l /dev puedo saber cuál es el puerto serial 0 o 1
@@ -209,23 +188,7 @@ def segundx(numero, fecha_sms, id_sms):
 				print(fecha)
 				
 				bdd(int(idc[posi]),float(consumo),float(t1),hum(h1),float(t2),hum(h2),float(t3),hum(h3),float(t4),hum(h4), str(fecha),str(hora))
-				
-				datos={
-					"numCasa":int(idc[posi]),
-					"consumption": float(consumo), 
-					"t1": float(t1),
-					"h1": hum(h1), 
-					"t2": float(t2), 
-					"h2": hum(h2), 
-					"t3": float(t3),
-					"h3": hum(h3), 
-					"t4": float(t4),
-					"h4": hum(h4), 
-					"date":fecha,
-					"hour":hora,
-				}
-				#print(datos)
-			
+
 				response = requests.post("https://graphql.cclimamagdalena.com/api/v1/houses/simple", json = datos)
 				#print(response)
 				json_response = response.json()
@@ -290,38 +253,6 @@ def mail(mensaje, asunto ):
 	except Exception as e:
 		print(e)
 
-
-
-
-
-
-
-def fecha_ok(fecha):
-	"""Acomoda la fecha y hora para ser guardada en MySQL"""
-	#Separa los valores de la fecha por /
-	fecha = fecha.split('/')
-	#Guarda en una variable el día, mes y año
-	dia, mes, anio = fecha
-	#Convierte a entero la variable que es un string
-	#Con date convierte el día, mes y año al formato de MySQL
-	fecha = anio+"/"+mes+"/"+dia
-	#Une la fecha y hora para ser guardada en MySQL
-	f_h = str(fecha)
-	return f_h
-
-
-
-
-def bdd(idcasa,consumo,t1,h1,t2,h2,t3,h3,t4,h4,fecha,hora):
-	datos = (idcasa, consumo, t1, h1, t2, h3, t3, h3, t4, h4, fecha, hora)
-	"""Función para guardar en la base de datos"""
-
-	agregar = "INSERT INTO datos (ID_Casa,COSNSUMO,T1,H1,T2,H2,T3,H3,T4,H4,FECHA,HORA) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,\"%s\",\"%s\");"
-	#Ejecuta el comando agregar con los valores datos en MySQL
-	cursor_rpi.execute(agregar, datos)
-	#Es necesario ejecutar commit para que funcione
-	#cnx.commit()
-	cnx_rpi.commit()
 
 
 
@@ -432,94 +363,3 @@ while True:
 
 
 
-
-
-
-
-
-
-
-#Final del codigo 
-
-
-
-
-# def sendmensaje(receptor, mns=""):
-# 	"""Función para enviar el mensaje"""
-# 	serie.write( 'AT\r\n')
-# 	time.sleep(1)
-# 	#Le ponemos en modo para SMS
-# 	serie.write( 'AT+CMGF=1\r\n')
-# 	time.sleep(1)
-# 	#Comando para enviar el mensaje, se pasa el valor del número
-# 	serie.write( 'AT+CMGS=\"' + receptor + '\"\r\n')
-# 	time.sleep(1)
-# 	#Se escribe el mensaje
-# 	serie.write( mns)
-# 	time.sleep(3)
-# 	#Termina el menzaje con Ctrl+z
-# 	serie.write( ascii.ctrl("z"))
-# 	time.sleep(3)
-# 	#Le pasamos un fin de linea
-# 	serie.write( '\r\n')
-# 	print ("Mensaje enviado\n")
-
-
-# def consulta_bdd_nivel(idx, valor1):
-#   """Consulta la base de datos entre un intérvalo de fechas"""
-#   try:
-#       if idx in id_acequia:
-#           if (int(valor1) < 30) or (int(valor1) > 490):
-#               print ("Buscando los valores del id: " + idx)
-#               query = ("SELECT valor FROM datos WHERE (valor>30) and (valor<490) and (id=" + idx + ");")
-#               cursor_rpi.execute(query)
-#               for (valor) in cursor_rpi:
-#                   consulta = ("{}".format(valor))
-#                   valor_ultimo = consulta[1:4]
-#               print ("El último valor bueno registrado es: " + valor_ultimo)
-#               return valor_ultimo
-#           return valor1
-#       if idx in id_nivel:
-#           if (int(valor1) < 30) or (int(valor1) > 990):
-#               print ("Buscando los valores del id: " + idx)
-#               query = ("SELECT valor FROM datos WHERE (valor>30) and (valor<990) and (id=" + idx + ");")
-#               cursor_rpi.execute(query)
-#               for (valor) in cursor_rpi:
-#                   consulta = ("{}".format(valor))
-#                   valor_ultimo = consulta[1:4]
-#               print ("El último valor bueno registrado es: " + valor_ultimo)
-#               return valor_ultimo
-#           return valor1
-#       return valor1
-#   except UnboundLocalError:
-#       print ("No hay nada en la base de datos")
-
-
-
-# def consulta_bdd(fecha_menor, fecha_mayor):
-# 	"""Consulta la base de datos entre un intérvalo de fechas"""
-# 	global hora_con
-# 	try:
-# 		if fecha_mayor > fecha_menor:
-# 			print ("Mandando los datos entre " + fecha_menor + " y " + fecha_mayor)
-# 			query = ("SELECT * FROM datos WHERE fecha_sms BETWEEN %s AND %s;")
-# 			datos = (fecha_menor, fecha_mayor)
-# 			cursor_rpi.execute(query, datos)
-# 			for (id, sensor, fecha, tipo, valor, bateria, fecha_sms) in cursor_rpi:
-# 				consulta = ("{} {} {} {} {} {} {}".format(id, sensor,
-# 					fecha, tipo, valor, bateria, fecha_sms))
-# 				print (consulta)
-# 				adecuacion_nueva(consulta)
-# 				hora_con = "0000-00-00 00:00:00"
-# 				publish.single("net", "Se fue el net pero ya regresó", hostname="31.220.62.19")
-# 	except UnboundLocalError:
-# 		print ("No hay nada en la base de datos")
-
-# def hora_now():
-# 	"""Función para entregar la hora actual"""
-# 	#Obtiene la hora actual
-# 	hora = time.strftime("%H:%M:%S")
-# 	#Obtiene la fecha actual
-# 	fecha = time.strftime("%Y-%m-%d")
-# 	fecha_total = fecha + " " + hora
-# 	return fecha_total
