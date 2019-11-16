@@ -350,7 +350,7 @@ def perro():
 			time.sleep(3)
 			if contador == 100:
 				print ("Finalizado, reboot")
-				os.system("sudo reboot")
+				#os.system("sudo reboot")
 		contador = 0
 		time.sleep(3)
 
