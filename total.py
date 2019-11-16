@@ -16,7 +16,18 @@ from curses import ascii
 import os
 #Importamos la librería que nos permite manejar varios hilos
 import threading
+import request
+
 """------------------------------------CONTROL DE PINES GPIO------------------------------------"""
+id_Guamal={"030","031","032","033","034","035","037","080","081","082","083","084","085","087","088","089"}	
+
+
+num_Guamal_{
+"3135881855","3135927486","3135670333","3135646220","3135666599","3135691884","3135885660","3135658864",
+"3135884387","3135660270","3135664037","3135883144","3135658913","3135639957","3135899636","3135642438"
+}
+
+
 
 #Inicia la comunicación serial por el puerto ttyS0 a 38400
 #Con ls -l /dev puedo saber cuál es el puerto serial 0 o 1
@@ -163,43 +174,30 @@ def segundx(numero, fecha_sms, id_sms):
 	while qap:
 		#Lee el puerto serial
 		segunda = serie.readline()
-		#segunda = "18 090 090 0000 24/01/2018 13:40:30\n"
-		#segunda = "01 012 067.89 012.34 912.34 056.78 0123.45 1234.56 11/02/2018 19:00:19\n"
-		#segunda = "fecha"
 		print ("Segunda linea: ")
 		#Imprime lo leido
 		print (segunda)
-##		if "3232474531" or "3209870659" in numero:
-##			print("----------Transmisor-----------\n")
-##			if net == "si":
-##				publish.single("bdd_cocodrilo",segunda, hostname="31.220.62.19")
-##			print("----------FIN Transmisor-----------\n")
-##		idy = segunda[0:2]
-		if idy in id_estacion:
-			print ("-------Es una estación meteorológica, llamando a la -------\n")
-			mejora_estacion(segunda, fecha_sms)
-		elif (idy in id_nivel) or (idy in id_acequia) or (idy in id_humedad):
-			print ("----------------Es un nodo, llamando a la mejora-----------------\n")
-			mejora(segunda, fecha_sms, numero)
-		elif "\r\n" in segunda:
-			if "fecha" in segunda:
-				print ("------------------Me está pidiendo la fecha------------------\n")
-				print ("Determinando la hora actual y agregándole 20 segundos")
-				#Ejecuta la función hora_20
-				#Encargada de dar la fecha y hora actual + 20 segundos
-				ho, fe = hora_20()
-				#Guarda el mensaje en el formato adecuado
-				ms = "f:" + fe + " h:" + ho
-				print (("El mensaje enviado es: " + ms))
-				#Manda el mensaje de texto con la hora actual + 20 sg
-				sendmensaje("+57" + numero, ms)
-				#Cierra el ciclo infinito
-				print ("Borrando sms: " + id_sms)
-				serie.write("AT+CMGD=" + id_sms + "\r\n")
-				time.sleep(1)
-				print ("---------------------Fin del ciclo Fecha---------------------\n")
-				qap = False
-			else:
+		if numero in num_Guamal:
+			print("Enviando Primer dato")
+			consumo,t1,h1,t2,h2,t3,h3,t4,h4,fecha,hora,crc=segunda.split(',')
+			response = requests.post('https://graphql.cclimamagdalena.com/api/v1/houses/simple', data = {'numCasa':id_Guamal[num_Guamal.index(numero)], 'consumption': consumo, 't1': t1,'h1': h1, 't2': t2, 'h2': h2, 't3': t3,'h3': h3, 'date': fecha,'hour':hora})
+			json_response = response.json()
+			json_response['data']
+	    elif "\r\n" in segunda:
+			segunda = serie.readline()
+		#segunda = "18 090 090 0000 24/01/2018 13:40:30\n"
+		#segunda = "01 012 067.89 012.34 912.34 056.78 0123.45 1234.56 11/02/2018 19:00:19\n"
+		#segunda = "fecha"
+		    print ("Segunda linea: ")
+		#Imprime lo leido
+		    print (segunda)
+		    if numero in num_Guamal:
+		    	print("Enviando Segundo dato")
+				consumo,t1,h1,t2,h2,t3,h3,t4,h4,fecha,hora,crc=segunda.split(',')
+				response = requests.post('https://graphql.cclimamagdalena.com/api/v1/houses/simple', data = {'numCasa':id_Guamal[num_Guamal.index(numero)], 'consumption': consumo, 't1': t1,'h1': h1, 't2': t2, 'h2': h2, 't3': t3,'h3': h3, 'date': fecha,'hour':hora})
+				json_response = response.json()
+				json_response['data']
+			elif "\r\n" in segunda:	
 				print ("Borrando sms: " + id_sms)
 				serie.write("AT+CMGD=" + id_sms + "\r\n")
 				time.sleep(1)
@@ -227,128 +225,8 @@ def consulta_bdd(fecha_menor, fecha_mayor):
 		print ("No hay nada en la base de datos")
 
 
-def adecuacion_nueva(linea):
-	"""Hola"""
-	separado = linea.split(' ')
-	print ("Dividiendo el mensaje por espacios")
-	idx, nombre, fecha, hora, tipo, valor, bat, fecha_sms, hora_sms = separado
-	#2 prueba 2018-04-25 10:30:17 luz 1032.87 82 2018-04-25 11:00:56
-	#'50','test',CURRENT_TIMESTAMP, 'ph', '"+msg.payload+"','90',CURRENT_TIMESTAMP)
-	#'01', 'test', '2016-01-09 09:05:00', 'temp', '047.34', '080', '2018-05-22 17:46:00'
-	publicar = ("'" + idx + "', '" + nombre + "', '" + fecha + " " + hora + "', '" + tipo
-		+ "', '" + valor + "', '" + bat + "', '" + fecha_sms + " " + hora_sms + "'")
-	print (publicar)
-##	publish.single("bdd", publicar, hostname="31.220.62.19")
-	print ("Enviando a ASOCIENAGA")
-	fecha_sms = fecha_sms + " " + hora_sms
-	f_h = fecha + " " + hora
-	fecha_sms_as = fecha_asocienaga(fecha_sms)
-	fecha_as = fecha_asocienaga(f_h)
-	asocienaga = ("curl -X POST --header 'Content-Type: application/json' --header 'Accept:"
-		" application/json' --header 'API-KEY: hZ23Q.A6+hA12sm@4T0i7wrW!XJ9bwm' -d '{ \"tipo\""
-		": \"" + tipo + "\", \"valor\": " + valor + ", \"nombre_sensor\": \"" + nombre + "\", "
-		"\"fecha_hora_sms\": \"" + fecha_sms_as + "\", \"fecha_hora_captura\": \"" + fecha_as + "\""
-		", \"bateria\": \"" + bat + "\" }' http://pruebas.siara.info.tm/sensor/guardar_dato")
-	print (asocienaga)
-	os.system(asocienaga)
-	time.sleep(0.01)
 
 
-def mejora_estacion(linea, fecha_sms):
-	"""Procesa la información que llega en la línea del mensaje"""
-	global net
-	#linea = "xx xxx xxx.xx xxx.xx xxx.xx xxx.xx xxx.xx xxx.xx xx/xx/xxxx xx:xx:xx\n"
-	#linea = "id bat hum    temp   vel    dir    plub   luz    d/m/a      h:m:s"
-	#Se separa por espacio la línea, ese es el protocolo
-	separado = linea.split(' ')
-	print ("Dividiendo el mensaje por espacios")
-	print (separado)
-	#Guarda en cada variable su valor asignado
-	idx, bat, hum, temp, vel, dire, plub, luz, fecha, hora = separado
-	#23:34:00
-	hora = hora[0:8]
-	dic = {"temp": temp, "hum": hum, "vel": vel, "dire": dire, "plub": plub, "luz": luz}
-	nombrex = {"temp": "2_Temperatura", "hum": "6_Humedad", "vel": "3_Velocidad del viento",
-		"dire": "4_Dirección del viento", "plub": "1_Pluviometro", "luz": "5_Radiación solar"}
-	#Arregla la fecha al formato de MySQL
-	f_h = fecha_ok(fecha, hora)
-	print (("La fecha para MySQL es: " + f_h))
-	for abc in s_estacion:
-		print (("Enviando por MQTT: " + abc))
-		topic = (idx + "/" + abc)
-		print (("Topic: " + topic))
-		print (("Valor: " + dic[abc]))
-		#Para el nombre del sensor será si es la estación 1 y temperatura 1_1
-		nombre = idx + "_" + nombrex[abc]
-		#Publica por MQTT el valor de del sensor en el topic indicado
-		#Guarda en la base de datos el id, cuál es, fecha, el tipo de sensor y valor
-		print ("Guardando en base de datos")
-		publicar = ("'" + idx + "', '" + nombre + "', '" + f_h + "', '" + abc
-			+ "', '" + dic[abc] + "', '" + bat + "', '" + fecha_sms + "'")
-		print (publicar)
-		bdd(idx, nombre, f_h, abc, dic[abc], bat, fecha_sms)
-		print ("Enviando a ASOCIENAGA")
-		fecha_sms_as = fecha_asocienaga(fecha_sms)
-		fecha_as = fecha_asocienaga(f_h)
-		vn = float(dic[abc])
-		print (vn)
-		#vn = int(vn)
-		asocienaga = ("curl -X POST --header 'Content-Type: application/json' --header 'Accept:"
-			" application/json' --header 'API-KEY: hZ23Q.A6+hA12sm@4T0i7wrW!XJ9bwm' -d '{ \"tipo\""
-			": \"" + abc + "\", \"valor\": " + str(vn) + ", \"nombre_sensor\": \"" + nombre + "\", "
-			"\"fecha_hora_sms\": \"" + fecha_sms_as + "\", \"fecha_hora_captura\": \"" + fecha_as + "\""
-			", \"bateria\": \"" + bat + "\" }' http://pruebas.siara.info.tm/sensor/guardar_dato")
-		print (asocienaga)
-		if net == "si":
-			publish.single(topic, dic[abc], hostname="31.220.62.19")
-			publish.single("bdd", publicar, hostname="31.220.62.19")
-			os.system(asocienaga)
-	print ("---------------------------Fin de la estación----------------------------\n")
-
-
-def fecha_asocienaga(fecha):
-	"""Hola"""
-	#2018-05-15 03:00:14
-	separado_fecha = fecha.split(' ')
-	fechax, horax = separado_fecha
-	fechay = fechax.replace('-', '/')
-	horay = horax[0:5]
-	corregido = fechay + " " + horay
-	return corregido
-
-
-def hora_20():
-	"""Función para entregar la hora al nodo con 20 sg de más"""
-	#Obtiene la hora actual
-	hh = time.strftime("%H:%M:%S")
-	print ("La hora actual es: " + hh)
-	#Separa la hora por :
-	horx = hh.split(':')
-	hora, minuto, segundo = horx
-	#Convierte a entero la hora, minuto y segundo
-	hora = int(hora)
-	minuto = int(minuto)
-	segundo = int(segundo)
-	#Le agrega 20 segundos a los segundos
-	nw_sg = segundo + 20
-	#Si hay más de 60 segundos corrige toda la hora
-	if nw_sg >= 60:
-		nw_sg = nw_sg - 60
-		minuto = minuto + 1
-		if minuto >= 60:
-			minuto = minuto - 60
-			hora = hora + 1
-	#Convierte a string la hora, minuto y segundo
-	segundo = str(nw_sg)
-	minuto = str(minuto)
-	hora = str(hora)
-	#Guarda en hh la hora de nuevo
-	hh = hora + ":" + minuto + ":" + segundo
-	#Obtiene la fecha actual
-	yy = time.strftime("%d/%m/%Y")
-	print ("La fecha actual es: " + yy)
-	print (("La hora actual sumándole 20 segundos es: " + hh))
-	return hh, yy
 
 
 def sendmensaje(receptor, mns=""):
@@ -372,132 +250,36 @@ def sendmensaje(receptor, mns=""):
 	print ("Mensaje enviado\n")
 
 
-def consulta_bdd_nivel(idx, valor1):
-	"""Consulta la base de datos entre un intérvalo de fechas"""
-	try:
-		if idx in id_acequia:
-			if (int(valor1) < 30) or (int(valor1) > 490):
-				print ("Buscando los valores del id: " + idx)
-				query = ("SELECT valor FROM datos WHERE (valor>30) and (valor<490) and (id=" + idx + ");")
-				cursor_rpi.execute(query)
-				for (valor) in cursor_rpi:
-					consulta = ("{}".format(valor))
-					valor_ultimo = consulta[1:4]
-				print ("El último valor bueno registrado es: " + valor_ultimo)
-				return valor_ultimo
-			return valor1
-		if idx in id_nivel:
-			if (int(valor1) < 30) or (int(valor1) > 990):
-				print ("Buscando los valores del id: " + idx)
-				query = ("SELECT valor FROM datos WHERE (valor>30) and (valor<990) and (id=" + idx + ");")
-				cursor_rpi.execute(query)
-				for (valor) in cursor_rpi:
-					consulta = ("{}".format(valor))
-					valor_ultimo = consulta[1:4]
-				print ("El último valor bueno registrado es: " + valor_ultimo)
-				return valor_ultimo
-			return valor1
-		return valor1
-	except UnboundLocalError:
-		print ("No hay nada en la base de datos")
+# def consulta_bdd_nivel(idx, valor1):
+# 	"""Consulta la base de datos entre un intérvalo de fechas"""
+# 	try:
+# 		if idx in id_acequia:
+# 			if (int(valor1) < 30) or (int(valor1) > 490):
+# 				print ("Buscando los valores del id: " + idx)
+# 				query = ("SELECT valor FROM datos WHERE (valor>30) and (valor<490) and (id=" + idx + ");")
+# 				cursor_rpi.execute(query)
+# 				for (valor) in cursor_rpi:
+# 					consulta = ("{}".format(valor))
+# 					valor_ultimo = consulta[1:4]
+# 				print ("El último valor bueno registrado es: " + valor_ultimo)
+# 				return valor_ultimo
+# 			return valor1
+# 		if idx in id_nivel:
+# 			if (int(valor1) < 30) or (int(valor1) > 990):
+# 				print ("Buscando los valores del id: " + idx)
+# 				query = ("SELECT valor FROM datos WHERE (valor>30) and (valor<990) and (id=" + idx + ");")
+# 				cursor_rpi.execute(query)
+# 				for (valor) in cursor_rpi:
+# 					consulta = ("{}".format(valor))
+# 					valor_ultimo = consulta[1:4]
+# 				print ("El último valor bueno registrado es: " + valor_ultimo)
+# 				return valor_ultimo
+# 			return valor1
+# 		return valor1
+# 	except UnboundLocalError:
+# 		print ("No hay nada en la base de datos")
 
 
-def mejora(linea, fecha_sms, numero):
-	"""Procesa la información que llega en la línea del mensaje"""
-	#linea = "18 090 090 0000 24/01/2018 13:40:30\n"
-	#Se separa por espacio la línea, ese es el protocolo
-	separado = linea.split(' ')
-	print ("Dividiendo el mensaje por espacios")
-	print (separado)
-	#Guarda en cada variable su valor asignado
-	idx, bat, hum, nivel, fecha, hora = separado
-	hora = hora[0:8]
-	hum1 = round(466.203 * 2 ** (-0.00700884 * ((float(hum) * 2 + 300) - 38.1629)) - 12.937, 2)
-	if hum1 > 100:
-		hum1 = 100
-	if hum1 < 0:
-		hum1 = 0
-	if numero == "3122455278":
-		if idx == "05":
-			idx = "06"
-	if idx in id_humedad:
-		nombre = idx + "_1_Humedad"
-	elif idx in id_acequia:
-		nombre = idx + "_1_Acequia"
-	elif idx in id_nivel:
-		nombre = idx + "_1_Rio"
-	hum1 = str(hum1)
-	print (hum1)
-	#Arregla la fecha al formato de MySQL
-	f_h = fecha_ok(fecha, hora)
-	print ("La fecha para MySQL es: " + f_h)
-	#Convierte a entero el id para poder compararlo
-	#Guarda el valor y el tipo de sensor dependiendo del id si es humedad o nivel
-	tipo_sensor, valor = valor_s(idx, hum, nivel)
-	if valor == hum:
-		valor1 = hum1
-	if valor == nivel:
-		valor1 = nivel
-	valor1 = consulta_bdd_nivel(idx, valor1)
-	print("Enviando mqtt...")
-	#Arregla el topic dependiendo del id y el tipo de sensor
-	topic = idx + "/" + tipo_sensor
-	print ("Topic: " + topic)
-	print ("Valor: " + valor1)
-	#Publica por MQTT el valor de del sensor en el topic indicado
-	#Guarda en la base de datos el id, cuál es, fecha, el tipo de sensor y valor
-	print ("Guardando en base de datos")
-	publicar = ("'" + idx + "', '" + nombre + "', '" + f_h + "', '" + tipo_sensor
-		+ "', '" + valor1 + "', '" + bat + "', '" + fecha_sms + "'")
-	print (publicar)
-	bdd(idx, nombre, f_h, tipo_sensor, valor1, bat, fecha_sms)
-	print ("Enviando a ASOCIENAGA")
-	fecha_sms_as = fecha_asocienaga(fecha_sms)
-	fecha_as = fecha_asocienaga(f_h)
-	vn = float(valor)
-	asocienaga = ("curl -X POST --header 'Content-Type: application/json' --header 'Accept:"
-		" application/json' --header 'API-KEY: hZ23Q.A6+hA12sm@4T0i7wrW!XJ9bwm' -d '{ \"tipo\""
-		": \"" + tipo_sensor + "\", \"valor\": " + str(vn) + ", \"nombre_sensor\": \"" + nombre + "\", "
-		"\"fecha_hora_sms\": \"" + fecha_sms_as + "\", \"fecha_hora_captura\": \"" + fecha_as + "\""
-		", \"bateria\": \"" + bat + "\" }' http://pruebas.siara.info.tm/sensor/guardar_dato")
-	print (asocienaga)
-	if net == "si":
-		publish.single(topic, valor1, hostname="31.220.62.19")
-		publish.single("bdd", publicar, hostname="31.220.62.19")
-		os.system(asocienaga)
-	if idx == "36":
-		idx = "12"
-		print("Añadiendo dato falso")
-		nombre = idx + "_1_Acequia"
-		valor1 = consulta_bdd_nivel(idx, "0")
-		print("Enviando mqtt...")
-		#Arregla el topic dependiendo del id y el tipo de sensor
-		tipo_sensor = "Acequia"
-		topic = idx + "/" + tipo_sensor
-		print ("Topic: " + topic)
-		print ("Valor: " + valor1)
-		#Publica por MQTT el valor de del sensor en el topic indicado
-		#Guarda en la base de datos el id, cuál es, fecha, el tipo de sensor y valor
-		print ("Guardando en base de datos")
-		publicar = ("'" + idx + "', '" + nombre + "', '" + f_h + "', '" + tipo_sensor
-			+ "', '" + valor1 + "', '" + bat + "', '" + fecha_sms + "'")
-		print (publicar)
-		bdd(idx, nombre, f_h, tipo_sensor, valor1, bat, fecha_sms)
-		print ("Enviando a ASOCIENAGA")
-		fecha_sms_as = fecha_asocienaga(fecha_sms)
-		fecha_as = fecha_asocienaga(f_h)
-		vn = float(valor1)
-		asocienaga = ("curl -X POST --header 'Content-Type: application/json' --header 'Accept:"
-			" application/json' --header 'API-KEY: hZ23Q.A6+hA12sm@4T0i7wrW!XJ9bwm' -d '{ \"tipo\""
-			": \"" + tipo_sensor + "\", \"valor\": " + str(vn) + ", \"nombre_sensor\": \"" + nombre + "\", "
-			"\"fecha_hora_sms\": \"" + fecha_sms_as + "\", \"fecha_hora_captura\": \"" + fecha_as + "\""
-			", \"bateria\": \"" + bat + "\" }' http://pruebas.siara.info.tm/sensor/guardar_dato")
-		print (asocienaga)
-		if net == "si":
-			publish.single(topic, valor1, hostname="31.220.62.19")
-			publish.single("bdd", publicar, hostname="31.220.62.19")
-			os.system(asocienaga)
-	print ("---------------------------Fin del nodo----------------------------------\n")
 
 
 def fecha_ok(fecha, hora):
@@ -517,30 +299,6 @@ def fecha_ok(fecha, hora):
 	return f_h
 
 
-def valor_s(idx, hum, nivel):
-	"""Devuelve el tipo de sensor y el valor a guarda de cada punto según la id"""
-	#Si el id está dentro del grupo de sensores de humedad
-	if idx in id_humedad:
-		print ("Es un sensor de humedad")
-		#Guarda como tipo de sensor "Humedad"
-		tipo_sensor = "Humedad"
-		#Guarda como valor del sensor el valor de la humedad
-		vx = hum
-		return tipo_sensor, vx
-	if idx in id_nivel:
-		print ("Es un sensor de nivel de agua en río")
-		#Guarda como tipo de sensor "Nivel"
-		tipo_sensor = "Nivel"
-		#Guarda como valor del sensor el valor del nivel
-		vx = nivel
-		return tipo_sensor, vx
-	if idx in id_acequia:
-		print ("Es un sensor de nivel de agua en Acequia")
-		#Guarda como tipo de sensor "Acequia"
-		tipo_sensor = "Acequia"
-		#Guarda como valor del sensor el valor del nivel
-		vx = nivel
-		return tipo_sensor, vx
 
 
 def bdd(idx, sensor, fecha, tipo, valor, bateria, fecha_sms):
