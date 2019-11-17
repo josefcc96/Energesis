@@ -44,15 +44,15 @@ print ("Abriendo el puerto serial")
 def inicio():
 	"""Acomoda el módulo para recibir mensajes"""
 	#Escribe AT para comprobar que se está comunicando con el SIM800L
-	serie.write( "AT\r\n"))
+	serie.write( "AT\r\n")
 	time.sleep(1)
 	print("Colocando el módulo en modo SMS")
 	#Pone el módulo en modo SMS
-	serie.write( "AT+CMGF=1\r\n"))
+	serie.write( "AT+CMGF=1\r\n")
 	time.sleep(1)
 	print("Escribiendo 1,0")
 	#Muestra el mensaje por el puerto serial
-	serie.write( "AT+CNMI=1,0,0,0,0\r\n"))
+	serie.write( "AT+CNMI=1,0,0,0,0\r\n")
 	time.sleep(1)
 
 
