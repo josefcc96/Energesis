@@ -15,7 +15,7 @@ from curses import ascii
 import os
 #Importamos la librería que nos permite manejar varios hilos
 import threading
-import request
+import requests
 
 """------------------------------------CONTROL DE PINES GPIO------------------------------------"""
 id_Guamal={"030","031","032","033","034","035","037","080","081","082","083","084","085","087","088","089"}	
