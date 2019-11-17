@@ -44,15 +44,15 @@ print ("Abriendo el puerto serial")
 def inicio():
 	"""Acomoda el módulo para recibir mensajes"""
 	#Escribe AT para comprobar que se está comunicando con el SIM800L
-	serie.write("AT\r\n")
+	serie.write(str.encode("AT\r\n"))
 	time.sleep(1)
 	print("Colocando el módulo en modo SMS")
 	#Pone el módulo en modo SMS
-	serie.write("AT+CMGF=1\r\n")
+	serie.write(str.encode("AT+CMGF=1\r\n"))
 	time.sleep(1)
 	print("Escribiendo 1,0")
 	#Muestra el mensaje por el puerto serial
-	serie.write("AT+CNMI=1,0,0,0,0\r\n")
+	serie.write(str.encode("AT+CNMI=1,0,0,0,0\r\n"))
 	time.sleep(1)
 
 
@@ -69,7 +69,7 @@ def conex():
 	#Mientras que el sistema mande error al escribir AT
 	while mal:
 		#Escribe AT en el puerto serial
-		serie.write("AT\r\n")
+		serie.write(str.encode("AT\r\n"))
 		serie.reset_input_buffer()
 		print ("Escribiendo AT esperando un OK")
 		time.sleep(0.5)
@@ -118,7 +118,7 @@ def primerx():
 	global hora_sin
 	hx = time.strftime("%H:%M:%S")
 	print (("Escribiendo cmgl a las: " + hx))
-	serie.write('AT+CMGL="ALL"\r\n')
+	serie.write(str.encode('AT+CMGL="ALL"\r\n'))
 	serie.reset_input_buffer()
 	control = True
 	while control:
@@ -194,7 +194,7 @@ def segundx(numero, fecha_sms, id_sms):
 				json_response['data']
 			elif "\r\n" in segunda:	
 				print ("Borrando sms: " + id_sms)
-				serie.write("AT+CMGD=" + id_sms + "\r\n")
+				serie.write(str.encode("AT+CMGD=" + id_sms + "\r\n"))
 				time.sleep(1)
 				print ("------------------Fin del ciclo otra razón-------------------\n")
 				qap = False
@@ -226,22 +226,22 @@ def consulta_bdd(fecha_menor, fecha_mayor):
 
 def sendmensaje(receptor, mns=""):
 	"""Función para enviar el mensaje"""
-	serie.write('AT\r\n')
+	serie.write(str.encode('AT\r\n'))
 	time.sleep(1)
 	#Le ponemos en modo para SMS
-	serie.write('AT+CMGF=1\r\n')
+	serie.write(str.encode('AT+CMGF=1\r\n'))
 	time.sleep(1)
 	#Comando para enviar el mensaje, se pasa el valor del número
-	serie.write('AT+CMGS=\"' + receptor + '\"\r\n')
+	serie.write(str.encode('AT+CMGS=\"' + receptor + '\"\r\n'))
 	time.sleep(1)
 	#Se escribe el mensaje
-	serie.write(mns)
+	serie.write(str.encode(mns))
 	time.sleep(3)
 	#Termina el menzaje con Ctrl+z
-	serie.write(ascii.ctrl("z"))
+	serie.write(str.encode(ascii.ctrl("z")))
 	time.sleep(3)
 	#Le pasamos un fin de linea
-	serie.write('\r\n')
+	serie.write(str.encode('\r\n'))
 	print ("Mensaje enviado\n")
 
 
@@ -401,7 +401,7 @@ while True:
 	except (ValueError, NameError, AttributeError):
 		print ("Hay un error al separar o en una variable o un atributo")
 		print ("Borrando sms: " + id_sms_global)
-		serie.write("AT+CMGD=" + id_sms_global + "\r\n")
+		serie.write(str.encode("AT+CMGD=" + id_sms_global + "\r\n"))
 		time.sleep(1)
 		print ("Fin del proceso")
 	#Si interrumpo con ctrl c
