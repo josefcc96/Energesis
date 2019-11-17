@@ -177,7 +177,7 @@ def segundx(numero, fecha_sms, id_sms):
 		print ("Segunda linea: ")
 		#Imprime lo leido
 		print (segunda)
-		if dato<2 
+		if dato<2: 
  		  if numero in num_Guamal:
 		 	 print("Enviando dato: "+ str(dato))
 			 posi=num_Guamal.index(numero)
@@ -187,7 +187,6 @@ def segundx(numero, fecha_sms, id_sms):
 			 json_response = response.json()
 			 json_response['data']
              dato+=1
-
 		elif "\r\n" in segunda:	
 			print ("Borrando sms: " + id_sms)
 			serie.write( "AT+CMGD=" + id_sms + "\r\n")
