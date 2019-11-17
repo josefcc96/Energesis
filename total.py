@@ -170,6 +170,7 @@ def segundx(numero, fecha_sms, id_sms):
 	#Variable de control del ciclo infinito
 	qap = True
 	#Inicia un ciclo infinito para leer varias veces el puerto serial
+	dato=0;
 	while qap:
 		#Lee el puerto serial
 		segunda = serie.readline()
@@ -177,36 +178,23 @@ def segundx(numero, fecha_sms, id_sms):
 		#Imprime lo leido
 		print (segunda)
 		if numero in num_Guamal:
-			print("Enviando Primer dato")
+			print("Enviando dato: "+ str(dato))
 			posi=num_Guamal.index(numero)
 			consumo,t1,h1,t2,h2,t3,h3,t4,h4,fecha,hora,crc=segunda.split(',')
 			print(str(posi)+"--"+consumo+"--"+t1+"--"+h1+"--"+t2+"--"+h2+"--"+t3+"--"+h3+"--"+t4+"--"+h4+"--"+fecha+"--"+hora+"--"+crc)
 			
 			response = requests.post('https://graphql.cclimamagdalena.com/api/v1/houses/simple', data = {'numCasa':id_Guamal[posi], 'consumption': consumo, 't1': t1,'h1': h1, 't2': t2, 'h2': h2, 't3': t3,'h3': h3, 'date': fecha,'hour':hora})
+			dato++
 			# json_response = response.json()
 			# json_response['data']
 			# print(data)
-		elif "\n" in segunda:
-			segunda = serie.readline()
-			print ("Tercera linea: ")
-			print (segunda)
-			if numero in num_Guamal:
-				print("Enviando segundo dato")
-				posi=num_Guamal.index(numero)
-				consumo,t1,h1,t2,h2,t3,h3,t4,h4,fecha,hora,crc=segunda.split(',')
-				print(str(posi)+"--"+consumo+"--"+t1+"--"+h1+"--"+t2+"--"+h2+"--"+t3+"--"+h3+"--"+t4+"--"+h4+"--"+fecha+"--"+hora+"--"+crc)
-				
-				response = requests.post('https://graphql.cclimamagdalena.com/api/v1/houses/simple', data = {'numCasa':id_Guamal[posi], 'consumption': consumo, 't1': t1,'h1': h1, 't2': t2, 'h2': h2, 't3': t3,'h3': h3, 'date': fecha,'hour':hora})
-				# json_response = response.json()
-				# json_response['data']
-				# print(data)
-			segunda = serie.readline()
 		elif "\r\n" in segunda:	
 			print ("Borrando sms: " + id_sms)
 			serie.write( "AT+CMGD=" + id_sms + "\r\n")
 			time.sleep(1)
 			print ("------------------Fin del ciclo otra razón-------------------\n")
 			qap = False
+			dato = 0
 
 
 def consulta_bdd(fecha_menor, fecha_mayor):
