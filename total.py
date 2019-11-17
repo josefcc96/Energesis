@@ -311,7 +311,7 @@ def fecha_ok(fecha):
 	mes = int(mes)
 	anio = int(anio)
 	#Con date convierte el día, mes y año al formato de MySQL
-	fecha = date(anio, mes, dia)
+	fecha = anio+"/"+mes+"/"+dia
 	#Une la fecha y hora para ser guardada en MySQL
 	f_h = str(fecha)
 	return f_h
