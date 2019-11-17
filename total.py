@@ -44,15 +44,15 @@ print ("Abriendo el puerto serial")
 def inicio():
 	"""Acomoda el módulo para recibir mensajes"""
 	#Escribe AT para comprobar que se está comunicando con el SIM800L
-	serie.write(str.encode("AT\r\n"))
+	serie.write( "AT\r\n"))
 	time.sleep(1)
 	print("Colocando el módulo en modo SMS")
 	#Pone el módulo en modo SMS
-	serie.write(str.encode("AT+CMGF=1\r\n"))
+	serie.write( "AT+CMGF=1\r\n"))
 	time.sleep(1)
 	print("Escribiendo 1,0")
 	#Muestra el mensaje por el puerto serial
-	serie.write(str.encode("AT+CNMI=1,0,0,0,0\r\n"))
+	serie.write( "AT+CNMI=1,0,0,0,0\r\n"))
 	time.sleep(1)
 
 
@@ -69,7 +69,7 @@ def conex():
 	#Mientras que el sistema mande error al escribir AT
 	while mal:
 		#Escribe AT en el puerto serial
-		serie.write(str.encode("AT\r\n"))
+		serie.write( "AT\r\n")
 		serie.reset_input_buffer()
 		print ("Escribiendo AT esperando un OK")
 		time.sleep(0.5)
@@ -79,7 +79,7 @@ def conex():
 		read = serie.readline()
 		print (("////////////////////////////" + read))
 		#Si la respuesta es OK
-		if str.encode("OK") in read:
+		if  "OK" in read:
 			#Controla la variable del ciclo infinito y la pone en falso
 			mal = False
 			#Pone el contador de errores en 0
@@ -118,13 +118,13 @@ def primerx():
 	global hora_sin
 	hx = time.strftime("%H:%M:%S")
 	print (("Escribiendo cmgl a las: " + hx))
-	serie.write(str.encode('AT+CMGL="ALL"\r\n'))
+	serie.write( 'AT+CMGL="ALL"\r\n')
 	serie.reset_input_buffer()
 	control = True
 	while control:
 		#+CMGL: 9,"REC READ","3003859853","","18/02/19,11:42:55-20"
 		linea = serie.readline()
-		if linea.startswith(b"+CMGL:") is True:
+		if linea.startswith("+CMGL:") is True:
 			cm, r, c1, numero, c2, n, c3, fecha, n2 = linea.split('"')
 			cmg, nada = cm.split(",")
 			cmgl, id_sms = cmg.split(" ")
@@ -142,9 +142,9 @@ def primerx():
 				#hora_sin = otra_fecha(fecha)
 			#consulta_bdd(hora_sin, hora_con)
 			segundx(numero, fecha_sms, id_sms)
-		if str.encode("OK") in linea:
+		if  "OK" in linea:
 			control = False
-		if str.encode("ERROR") in linea:
+		if  "ERROR" in linea:
 			control = False
 		print ("-----------------------------------------------------------")
 	print ("FIN")
@@ -179,9 +179,11 @@ def segundx(numero, fecha_sms, id_sms):
 		if numero in num_Guamal:
 			print("Enviando Primer dato")
 			consumo,t1,h1,t2,h2,t3,h3,t4,h4,fecha,hora,crc=segunda.split(',')
+			print(consumo+"--"+t1+"--"+h1+"--"+t2+"--"+h2+"--"+t3+"--"+h3+"--"+t4+"--"+h4+"--"+fecha+"--"+hora+"--"+crc)
 			response = requests.post('https://graphql.cclimamagdalena.com/api/v1/houses/simple', data = {'numCasa':id_Guamal[num_Guamal.index(numero)], 'consumption': consumo, 't1': t1,'h1': h1, 't2': t2, 'h2': h2, 't3': t3,'h3': h3, 'date': fecha,'hour':hora})
-			json_response = response.json()
-			json_response['data']
+			# json_response = response.json()
+			# json_response['data']
+			# print(data)
 		elif "\n" in segunda:
 			segunda = serie.readline()
 			print ("Segunda linea: ")
@@ -189,12 +191,13 @@ def segundx(numero, fecha_sms, id_sms):
 			if numero in num_Guamal:
 				print("Enviando Segundo dato")
 				consumo,t1,h1,t2,h2,t3,h3,t4,h4,fecha,hora,crc=segunda.split(',')
+				print(consumo+"--"+t1+"--"+h1+"--"+t2+"--"+h2+"--"+t3+"--"+h3+"--"+t4+"--"+h4+"--"+fecha+"--"+hora+"--"+crc)
 				response = requests.post('https://graphql.cclimamagdalena.com/api/v1/houses/simple', data = {'numCasa':id_Guamal[num_Guamal.index(numero)], 'consumption': consumo, 't1': t1,'h1': h1, 't2': t2, 'h2': h2, 't3': t3,'h3': h3, 'date': fecha,'hour':hora})
-				json_response = response.json()
-				json_response['data']
+				# json_response = response.json()
+				# json_response['data']
 			elif "\r\n" in segunda:	
 				print ("Borrando sms: " + id_sms)
-				serie.write(str.encode("AT+CMGD=" + id_sms + "\r\n"))
+				serie.write( "AT+CMGD=" + id_sms + "\r\n")
 				time.sleep(1)
 				print ("------------------Fin del ciclo otra razón-------------------\n")
 				qap = False
@@ -226,22 +229,22 @@ def consulta_bdd(fecha_menor, fecha_mayor):
 
 def sendmensaje(receptor, mns=""):
 	"""Función para enviar el mensaje"""
-	serie.write(str.encode('AT\r\n'))
+	serie.write( 'AT\r\n')
 	time.sleep(1)
 	#Le ponemos en modo para SMS
-	serie.write(str.encode('AT+CMGF=1\r\n'))
+	serie.write( 'AT+CMGF=1\r\n')
 	time.sleep(1)
 	#Comando para enviar el mensaje, se pasa el valor del número
-	serie.write(str.encode('AT+CMGS=\"' + receptor + '\"\r\n'))
+	serie.write( 'AT+CMGS=\"' + receptor + '\"\r\n')
 	time.sleep(1)
 	#Se escribe el mensaje
-	serie.write(str.encode(mns))
+	serie.write( mns)
 	time.sleep(3)
 	#Termina el menzaje con Ctrl+z
-	serie.write(str.encode(ascii.ctrl("z")))
+	serie.write( ascii.ctrl("z"))
 	time.sleep(3)
 	#Le pasamos un fin de linea
-	serie.write(str.encode('\r\n'))
+	serie.write( '\r\n')
 	print ("Mensaje enviado\n")
 
 
@@ -404,7 +407,7 @@ while True:
 		print(NameError)
 		print(AttributeError)
 		print ("Borrando sms: " + id_sms_global)
-		serie.write(str.encode("AT+CMGD=" + id_sms_global + "\r\n"))
+		serie.write( "AT+CMGD=" + id_sms_global + "\r\n")
 		time.sleep(1)
 		print ("Fin del proceso")
 	#Si interrumpo con ctrl c
