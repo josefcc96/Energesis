@@ -16,6 +16,7 @@ import os
 #Importamos la librería que nos permite manejar varios hilos
 import threading
 import requests
+import json
 
 """------------------------------------CONTROL DE PINES GPIO------------------------------------"""
 id_Guamal=["030","031","032","033","034","035","037","080","081","082","083","084","085","087","088","089"]
@@ -189,7 +190,7 @@ def segundx(numero, fecha_sms, id_sms):
 				print(str(posi)+"--"+consumo+"--"+t1+"--"+h1+"--"+t2+"--"+h2+"--"+t3+"--"+h3+"--"+t4+"--"+h4+"--"+fecha+"--"+hora+"--"+crc)
 				response = requests.post('https://graphql.cclimamagdalena.com/api/v1/houses/simple', data = {'numCasa':id_Guamal[posi], 'consumption': consumo, 't1': t1,'h1': h1, 't2': t2, 'h2': h2, 't3': t3,'h3': h3, 'date': fecha,'hour':hora})
 				json_response = response.json()
-			    # json_response['data']
+			    json_response['data']
 				dato+=1
 
 		elif "\r\n" in segunda: 
@@ -347,7 +348,7 @@ def perro():
 			time.sleep(3)
 			if contador == 100:
 				print ("Finalizado, reboot")
-				#os.system("sudo reboot")
+				os.system("sudo reboot")
 		contador = 0
 		time.sleep(3)
 
