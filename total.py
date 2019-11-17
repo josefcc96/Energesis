@@ -189,12 +189,12 @@ def segundx(numero, fecha_sms, id_sms):
 				consumo,t1,h1,t2,h2,t3,h3,t4,h4,fecha,hora,crc=segunda.split(',')
 				print(str(posi)+"--"+consumo+"--"+t1+"--"+h1+"--"+t2+"--"+h2+"--"+t3+"--"+h3+"--"+t4+"--"+h4+"--"+fecha+"--"+hora+"--"+crc)
 				response = requests.post('https://graphql.cclimamagdalena.com/api/v1/houses/simple', data = {'numCasa':id_Guamal[posi], 'consumption': consumo, 't1': t1,'h1': h1, 't2': t2, 'h2': h2, 't3': t3,'h3': h3, 'date': fecha,'hour':hora})
-				print(response)
+				#print(response)
 				json_response = response.json()
 				#json_response['data']
-				#print(json_response['data'])
+				print(json_response)
 				dato+=1
-				if response==400 :
+				if '400' in json_response :
 					print("Error en el envio de datos")
 					print("No se borra el mensaje")
 					print("----------------Fin por error de envio-----------")
