@@ -189,14 +189,14 @@ def segundx(numero, fecha_sms, id_sms):
 				consumo,t1,h1,t2,h2,t3,h3,t4,h4,fecha,hora,crc=segunda.split(',')
 				print(str(posi)+"--"+consumo+"--"+t1+"--"+h1+"--"+t2+"--"+h2+"--"+t3+"--"+h3+"--"+t4+"--"+h4+"--"+fecha+"--"+hora+"--"+crc)
 				datos={
-					"numCasa":id_Guamal[posi],
-					"consumption": consumo, 
-					"t1": t1,
-					"h1": h1, 
-					"t2": t2, 
-					"h2": h2, 
-					"t3": t3,
-					"h3": h3, 
+					"numCasa":int(id_Guamal[posi]),
+					"consumption": float(consumo), 
+					"t1": float(t1),
+					"h1": float(h1), 
+					"t2": float(t2), 
+					"h2": float(h2), 
+					"t3": float(t3),
+					"h3": float(h3), 
 					"date": '"'+fecha+'"',
 					"hour":'"'+hora+'"',
 				}
