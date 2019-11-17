@@ -188,10 +188,10 @@ def segundx(numero, fecha_sms, id_sms):
 			# print(data)
 		elif "\n" in segunda:
 			segunda = serie.readline()
-			print ("Segunda linea: ")
+			print ("Tercera linea: ")
 			print (segunda)
 			if numero in num_Guamal:
-				print("Enviando Primer dato")
+				print("Enviando segundo dato")
 				posi=num_Guamal.index(numero)
 				consumo,t1,h1,t2,h2,t3,h3,t4,h4,fecha,hora,crc=segunda.split(',')
 				print(str(posi)+"--"+consumo+"--"+t1+"--"+h1+"--"+t2+"--"+h2+"--"+t3+"--"+h3+"--"+t4+"--"+h4+"--"+fecha+"--"+hora+"--"+crc)
@@ -200,12 +200,13 @@ def segundx(numero, fecha_sms, id_sms):
 				# json_response = response.json()
 				# json_response['data']
 				# print(data)
-			elif "\r\n" in segunda:	
-				print ("Borrando sms: " + id_sms)
-				serie.write( "AT+CMGD=" + id_sms + "\r\n")
-				time.sleep(1)
-				print ("------------------Fin del ciclo otra razón-------------------\n")
-				qap = False
+			segunda = serie.readline()
+		elif "\r\n" in segunda:	
+			print ("Borrando sms: " + id_sms)
+			serie.write( "AT+CMGD=" + id_sms + "\r\n")
+			time.sleep(1)
+			print ("------------------Fin del ciclo otra razón-------------------\n")
+			qap = False
 
 
 def consulta_bdd(fecha_menor, fecha_mayor):
