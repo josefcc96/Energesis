@@ -308,7 +308,7 @@ def fecha_ok(fecha):
 	dia, mes, anio = fecha
 	#Convierte a entero la variable que es un string
 	#Con date convierte el día, mes y año al formato de MySQL
-	fecha = anio[2:3]+"/"+mes+"/"+dia
+	fecha = anio[2:4]+"/"+mes+"/"+dia
 	#Une la fecha y hora para ser guardada en MySQL
 	f_h = str(fecha)
 	return f_h
