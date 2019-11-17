@@ -142,7 +142,7 @@ def primerx():
 				#hora_sin = otra_fecha(fecha)
 			#consulta_bdd(hora_sin, hora_con)
 			segundx(numero, fecha_sms, id_sms)
-		if str.encode("OK") in linea:
+		if str.encode("OK")) in linea:
 			control = False
 		if str.encode("ERROR") in linea:
 			control = False
@@ -400,6 +400,9 @@ while True:
 		print("Something went wrong: {}".format(err))
 	except (ValueError, NameError, AttributeError):
 		print ("Hay un error al separar o en una variable o un atributo")
+		print(ValueError)
+		print(NameError)
+		print(AttributeError)
 		print ("Borrando sms: " + id_sms_global)
 		serie.write(str.encode("AT+CMGD=" + id_sms_global + "\r\n"))
 		time.sleep(1)
