@@ -188,7 +188,6 @@ def segundx(numero, fecha_sms, id_sms):
 				posi=num_Guamal.index(numero)
 				consumo,t1,h1,t2,h2,t3,h3,t4,h4,fecha,hora,crc=segunda.split(',')
 				fecha=fecha_ok(fecha);
-				print(str(posi)+"--"+consumo+"--"+t1+"--"+h1+"--"+t2+"--"+h2+"--"+t3+"--"+h3+"--"+t4+"--"+h4+"--"+fecha+"--"+hora+"--"+crc)
 				datos={
 					"numCasa":int(id_Guamal[posi]),
 					"consumption": float(consumo), 
