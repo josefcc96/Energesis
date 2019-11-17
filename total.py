@@ -79,7 +79,7 @@ def conex():
 		read = serie.readline()
 		print (("////////////////////////////" + read))
 		#Si la respuesta es OK
-		if "OK" in read:
+		if str.encode("OK") in read:
 			#Controla la variable del ciclo infinito y la pone en falso
 			mal = False
 			#Pone el contador de errores en 0
@@ -142,9 +142,9 @@ def primerx():
 				#hora_sin = otra_fecha(fecha)
 			#consulta_bdd(hora_sin, hora_con)
 			segundx(numero, fecha_sms, id_sms)
-		if "OK" in linea:
+		if str.encode("OK") in linea:
 			control = False
-		if "ERROR" in linea:
+		if str.encode("ERROR") in linea:
 			control = False
 		print ("-----------------------------------------------------------")
 	print ("FIN")
