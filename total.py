@@ -187,7 +187,6 @@ def segundx(numero, fecha_sms, id_sms):
 				print("Enviando dato: "+ str(dato))
 				posi=num_Guamal.index(numero)
 				consumo,t1,h1,t2,h2,t3,h3,t4,h4,fecha,hora,crc=segunda.split(',')
-				print(fecha_ok(fecha,hora))
 				print(str(posi)+"--"+consumo+"--"+t1+"--"+h1+"--"+t2+"--"+h2+"--"+t3+"--"+h3+"--"+t4+"--"+h4+"--"+fecha+"--"+hora+"--"+crc)
 				datos={
 					"numCasa":int(id_Guamal[posi]),
@@ -198,7 +197,7 @@ def segundx(numero, fecha_sms, id_sms):
 					"h2": float(h2), 
 					"t3": float(t3),
 					"h3": float(h3), 
-					"date":fecha,
+					"date":fecha_ok(fecha),
 					"hour":hora,
 				}
 				print(datos)
@@ -300,7 +299,7 @@ def sendmensaje(receptor, mns=""):
 
 
 
-def fecha_ok(fecha, hora):
+def fecha_ok(fecha):
 	"""Acomoda la fecha y hora para ser guardada en MySQL"""
 	#Separa los valores de la fecha por /
 	fecha = fecha.split('/')
@@ -313,7 +312,7 @@ def fecha_ok(fecha, hora):
 	#Con date convierte el día, mes y año al formato de MySQL
 	fecha = date(anio, mes, dia)
 	#Une la fecha y hora para ser guardada en MySQL
-	f_h = str(fecha) + " " + hora
+	f_h = str(fecha)
 	return f_h
 
 
