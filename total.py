@@ -335,9 +335,10 @@ hora_sin = "0000-00-00 00:00:00"
 
 def perro():
 	"""Perro guardian"""
-	global control
+	global control 
 	global infinito
 	contador = 0
+	control = True
 	print ("Función de perro guardian")
 	while infinito:
 		while control:
