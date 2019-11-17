@@ -183,16 +183,12 @@ def segundx(numero, fecha_sms, id_sms):
 			response = requests.post('https://graphql.cclimamagdalena.com/api/v1/houses/simple', data = {'numCasa':id_Guamal[num_Guamal.index(numero)], 'consumption': consumo, 't1': t1,'h1': h1, 't2': t2, 'h2': h2, 't3': t3,'h3': h3, 'date': fecha,'hour':hora})
 			json_response = response.json()
 			json_response['data']
-	    elif "\r\n" in segunda:
+		elif "\r\n" in segunda:
 			segunda = serie.readline()
-		#segunda = "18 090 090 0000 24/01/2018 13:40:30\n"
-		#segunda = "01 012 067.89 012.34 912.34 056.78 0123.45 1234.56 11/02/2018 19:00:19\n"
-		#segunda = "fecha"
-		    print ("Segunda linea: ")
-		#Imprime lo leido
-		    print (segunda)
-		    if numero in num_Guamal:
-		    	print("Enviando Segundo dato")
+			print ("Segunda linea: ")
+			print (segunda)
+			if numero in num_Guamal:
+				print("Enviando Segundo dato")
 				consumo,t1,h1,t2,h2,t3,h3,t4,h4,fecha,hora,crc=segunda.split(',')
 				response = requests.post('https://graphql.cclimamagdalena.com/api/v1/houses/simple', data = {'numCasa':id_Guamal[num_Guamal.index(numero)], 'consumption': consumo, 't1': t1,'h1': h1, 't2': t2, 'h2': h2, 't3': t3,'h3': h3, 'date': fecha,'hour':hora})
 				json_response = response.json()
