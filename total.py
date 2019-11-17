@@ -171,7 +171,7 @@ def segundx(numero, fecha_sms, id_sms):
 	qap = True
 	#Inicia un ciclo infinito para leer varias veces el puerto serial
 	dato=0;
-	while qap:
+	while qap && dato<2:
 		#Lee el puerto serial
 		segunda = serie.readline()
 		print ("Segunda linea: ")
@@ -188,6 +188,7 @@ def segundx(numero, fecha_sms, id_sms):
 			# json_response = response.json()
 			# json_response['data']
 			# print(data)
+
 		elif "\r\n" in segunda:	
 			print ("Borrando sms: " + id_sms)
 			serie.write( "AT+CMGD=" + id_sms + "\r\n")
