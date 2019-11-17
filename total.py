@@ -3,8 +3,6 @@
 import serial
 #Importamos la librería de tiempo
 import time
-#Librería de MQTT para publicar
-import paho.mqtt.publish as publish
 #Conectar a la base de datos
 import mysql.connector
 #Importa la librería para modificaciones de tiempo
@@ -216,8 +214,7 @@ def consulta_bdd(fecha_menor, fecha_mayor):
 				print (consulta)
 				adecuacion_nueva(consulta)
 			hora_con = "0000-00-00 00:00:00"
-			publish.single("net", "Se fue el net pero ya regresó", hostname="31.220.62.19")
-	except UnboundLocalError:
+				except UnboundLocalError:
 		print ("No hay nada en la base de datos")
 
 
