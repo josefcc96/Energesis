@@ -409,13 +409,14 @@ while True:
 	except KeyboardInterrupt:
 		GPIO.cleanup()
 		infinito = False
-		break
+		control=False
 		serie.close()
 		#cursor.close()
 		cursor_rpi.close()
 		#cnx.close()
 		cnx_rpi.close()
 		print ("Fin del proceso")
+		break
 	#Cuando finalice el ciclo try
 	finally:
 		GPIO.cleanup()
