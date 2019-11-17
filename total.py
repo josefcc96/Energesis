@@ -197,8 +197,8 @@ def segundx(numero, fecha_sms, id_sms):
 					"h2": float(h2), 
 					"t3": float(t3),
 					"h3": float(h3), 
-					"date": '"'+fecha+'"',
-					"hour":'"'+hora+'"',
+					"date":fecha,
+					"hour":hora,
 				}
 				print(datos)
 				response = requests.post('https://graphql.cclimamagdalena.com/api/v1/houses/simple', data = datos)
