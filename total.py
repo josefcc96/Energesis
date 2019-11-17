@@ -142,7 +142,7 @@ def primerx():
 				#hora_sin = otra_fecha(fecha)
 			#consulta_bdd(hora_sin, hora_con)
 			segundx(numero, fecha_sms, id_sms)
-		if str.encode("OK")) in linea:
+		if str.encode("OK") in linea:
 			control = False
 		if str.encode("ERROR") in linea:
 			control = False
