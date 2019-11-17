@@ -178,15 +178,16 @@ def segundx(numero, fecha_sms, id_sms):
 		#Imprime lo leido
 		print (segunda)
 		if dato<2: 
- 		  if numero in num_Guamal:
-		 	 print("Enviando dato: "+ str(dato))
-			 posi=num_Guamal.index(numero)
-			 consumo,t1,h1,t2,h2,t3,h3,t4,h4,fecha,hora,crc=segunda.split(',')
-			 print(str(posi)+"--"+consumo+"--"+t1+"--"+h1+"--"+t2+"--"+h2+"--"+t3+"--"+h3+"--"+t4+"--"+h4+"--"+fecha+"--"+hora+"--"+crc)
-			 response = requests.post('https://graphql.cclimamagdalena.com/api/v1/houses/simple', data = {'numCasa':id_Guamal[posi], 'consumption': consumo, 't1': t1,'h1': h1, 't2': t2, 'h2': h2, 't3': t3,'h3': h3, 'date': fecha,'hour':hora})
-			 json_response = response.json()
-			 json_response['data']
-             dato+=1
+			if numero in num_Guamal:
+				print("Enviando dato: "+ str(dato))
+				posi=num_Guamal.index(numero)
+				consumo,t1,h1,t2,h2,t3,h3,t4,h4,fecha,hora,crc=segunda.split(',')
+				print(str(posi)+"--"+consumo+"--"+t1+"--"+h1+"--"+t2+"--"+h2+"--"+t3+"--"+h3+"--"+t4+"--"+h4+"--"+fecha+"--"+hora+"--"+crc)
+				response = requests.post('https://graphql.cclimamagdalena.com/api/v1/houses/simple', data = {'numCasa':id_Guamal[posi], 'consumption': consumo, 't1': t1,'h1': h1, 't2': t2, 'h2': h2, 't3': t3,'h3': h3, 'date': fecha,'hour':hora})
+				json_response = response.json()
+				json_response['data']
+				dato+=1
+
 		elif "\r\n" in segunda:	
 			print ("Borrando sms: " + id_sms)
 			serie.write( "AT+CMGD=" + id_sms + "\r\n")
