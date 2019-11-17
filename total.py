@@ -171,7 +171,7 @@ def segundx(numero, fecha_sms, id_sms):
 	qap = True
 	#Inicia un ciclo infinito para leer varias veces el puerto serial
 	dato=0;
-	while qap && dato<2:
+	while qap & dato<2:
 		#Lee el puerto serial
 		segunda = serie.readline()
 		print ("Segunda linea: ")
