@@ -55,7 +55,7 @@ def inicio():
 	time.sleep(1)
 
 
-def conex():
+	def conex():
 	"""Determina si el módulo GSM esta funcionando
 		Manda AT, si el módulo no responde ok cierra el ciclo infinito
 		Y abre el ciclo infinito para todos los procesos, de no ser así vuelve a
@@ -85,7 +85,7 @@ def conex():
 			contador = 0
 			return True
 		#Si la respuesta no es OK (sino error)
-		else:
+	else:
 			#Coloca la variable que controla el ciclo infinito en True
 			mal = True
 			#Cuenta un error
@@ -103,15 +103,15 @@ def conex():
 				pass
 				contador = 0
 				#Mandar gmal
-			return False
+				return False
 
-global control
-control = False
+				global control
+				control = False
 
 
-def primerx():
+				def primerx():
 	"""Lee la primera línea del puerto serial
-		Si llegó un SMS (+CMT) lee la segunda línea"""
+	Si llegó un SMS (+CMT) lee la segunda línea"""
 	global control
 	global hora_con
 	global hora_sin
@@ -141,17 +141,17 @@ def primerx():
 				#hora_sin = otra_fecha(fecha)
 			#consulta_bdd(hora_sin, hora_con)
 			segundx(numero, fecha_sms, id_sms)
-		if "OK" in linea:
-			control = False
-		if "ERROR" in linea:
-			control = False
-		print ("-----------------------------------------------------------")
-	print ("FIN")
+			if "OK" in linea:
+				control = False
+				if "ERROR" in linea:
+					control = False
+					print ("-----------------------------------------------------------")
+					print ("FIN")
 
 
-def otra_fecha(fx):
-	"""Hola"""
-	fx = fx[0:17]
+					def otra_fecha(fx):
+						"""Hola"""
+						fx = fx[0:17]
 	#xxxx-xx-xx xx:xx:xx
 	separadox = fx.split(',')
 	fechax, hora = separadox
@@ -166,37 +166,37 @@ def segundx(numero, fecha_sms, id_sms):
 	"""Lee la segunda línea del puerto serial dependiendo del mensaje hará cosas"""
 	global id_sms_global
 	id_sms_global = id_sms
-	#Variable de control del ciclo infinito
-	qap = True
-	#Inicia un ciclo infinito para leer varias veces el puerto serial
-	while qap:
-		#Lee el puerto serial
+#Variable de control del ciclo infinito
+qap = True
+#Inicia un ciclo infinito para leer varias veces el puerto serial
+while qap:
+	#Lee el puerto serial
+	segunda = serie.readline()
+	print ("Segunda linea: ")
+	#Imprime lo leido
+	print (segunda)
+	if numero in num_Guamal:
+		print("Enviando Primer dato")
+		consumo,t1,h1,t2,h2,t3,h3,t4,h4,fecha,hora,crc=segunda.split(',')
+		response = requests.post('https://graphql.cclimamagdalena.com/api/v1/houses/simple', data = {'numCasa':id_Guamal[num_Guamal.index(numero)], 'consumption': consumo, 't1': t1,'h1': h1, 't2': t2, 'h2': h2, 't3': t3,'h3': h3, 'date': fecha,'hour':hora})
+		json_response = response.json()
+		json_response['data']
+    elif "\r\n" in segunda:
 		segunda = serie.readline()
 		print ("Segunda linea: ")
-		#Imprime lo leido
 		print (segunda)
 		if numero in num_Guamal:
-			print("Enviando Primer dato")
+			print("Enviando Segundo dato")
 			consumo,t1,h1,t2,h2,t3,h3,t4,h4,fecha,hora,crc=segunda.split(',')
 			response = requests.post('https://graphql.cclimamagdalena.com/api/v1/houses/simple', data = {'numCasa':id_Guamal[num_Guamal.index(numero)], 'consumption': consumo, 't1': t1,'h1': h1, 't2': t2, 'h2': h2, 't3': t3,'h3': h3, 'date': fecha,'hour':hora})
 			json_response = response.json()
 			json_response['data']
-		elif "\r\n" in segunda:
-			segunda = serie.readline()
-			print ("Segunda linea: ")
-			print (segunda)
-			if numero in num_Guamal:
-				print("Enviando Segundo dato")
-				consumo,t1,h1,t2,h2,t3,h3,t4,h4,fecha,hora,crc=segunda.split(',')
-				response = requests.post('https://graphql.cclimamagdalena.com/api/v1/houses/simple', data = {'numCasa':id_Guamal[num_Guamal.index(numero)], 'consumption': consumo, 't1': t1,'h1': h1, 't2': t2, 'h2': h2, 't3': t3,'h3': h3, 'date': fecha,'hour':hora})
-				json_response = response.json()
-				json_response['data']
-			elif "\r\n" in segunda:	
-				print ("Borrando sms: " + id_sms)
-				serie.write("AT+CMGD=" + id_sms + "\r\n")
-				time.sleep(1)
-				print ("------------------Fin del ciclo otra razón-------------------\n")
-				qap = False
+		elif "\r\n" in segunda:	
+			print ("Borrando sms: " + id_sms)
+			serie.write("AT+CMGD=" + id_sms + "\r\n")
+			time.sleep(1)
+			print ("------------------Fin del ciclo otra razón-------------------\n")
+			qap = False
 
 
 def consulta_bdd(fecha_menor, fecha_mayor):
@@ -213,9 +213,9 @@ def consulta_bdd(fecha_menor, fecha_mayor):
 					fecha, tipo, valor, bateria, fecha_sms))
 				print (consulta)
 				adecuacion_nueva(consulta)
-			hora_con = "0000-00-00 00:00:00"
-				except UnboundLocalError:
-		print ("No hay nada en la base de datos")
+				hora_con = "0000-00-00 00:00:00"
+			except UnboundLocalError:
+				print ("No hay nada en la base de datos")
 
 
 
@@ -299,16 +299,16 @@ def bdd(idx, sensor, fecha, tipo, valor, bateria, fecha_sms):
 	datos = (idx, sensor, fecha, tipo, valor, bateria, fecha_sms)
 	agregar = ("INSERT INTO datos (id, sensor, fecha, tipo, valor, bateria, fecha_sms)VALUES "
 		"(%s, %s, %s, %s, %s, %s, %s);")
-	#Ejecuta el comando agregar con los valores datos en MySQL
-	#cursor.execute(agregar, datos)
-	cursor_rpi.execute(agregar, datos)
-	#Es necesario ejecutar commit para que funcione
-	#cnx.commit()
-	cnx_rpi.commit()
+#Ejecuta el comando agregar con los valores datos en MySQL
+#cursor.execute(agregar, datos)
+cursor_rpi.execute(agregar, datos)
+#Es necesario ejecutar commit para que funcione
+#cnx.commit()
+cnx_rpi.commit()
 
 
 def hora_now():
-	"""Función para entregar la hora actual"""
+		"""Función para entregar la hora actual"""
 	#Obtiene la hora actual
 	hora = time.strftime("%H:%M:%S")
 	#Obtiene la fecha actual
@@ -317,17 +317,17 @@ def hora_now():
 	return fecha_total
 
 
-global infinito
-infinito = True
-global id_sms_global
-id_sms_global = 0
-cnt = 0
-global net
-net = "si"
-global hora_con
-global hora_sin
-hora_con = "0000-00-00 00:00:00"
-hora_sin = "0000-00-00 00:00:00"
+	global infinito
+	infinito = True
+	global id_sms_global
+	id_sms_global = 0
+	cnt = 0
+	global net
+	net = "si"
+	global hora_con
+	global hora_sin
+	hora_con = "0000-00-00 00:00:00"
+	hora_sin = "0000-00-00 00:00:00"
 
 
 def perro():
@@ -343,12 +343,12 @@ def perro():
 			time.sleep(3)
 			if contador == 100:
 				print ("Finalizado, reboot")
-				#os.system("sudo reboot")
-		contador = 0
-		time.sleep(3)
+			#os.system("sudo reboot")
+			contador = 0
+			time.sleep(3)
 
-hilo_perro = threading.Thread(target=perro)
-hilo_perro.start()
+			hilo_perro = threading.Thread(target=perro)
+			hilo_perro.start()
 #Inicia el ciclo infinito del proyecto
 while True:
 	#Trata de realizar todo el proyecto
@@ -392,28 +392,28 @@ while True:
 					time.sleep(6)
 					inicio()
 					cnt = 0
-			time.sleep(1)
+					time.sleep(1)
 	#Si hay un error de nombre de variable o no se puede dividir algún mensaje
-	except mysql.connector.Error as err:
-		print("Something went wrong: {}".format(err))
-	except (ValueError, NameError, AttributeError):
-		print ("Hay un error al separar o en una variable o un atributo")
-		print ("Borrando sms: " + id_sms_global)
-		serie.write("AT+CMGD=" + id_sms_global + "\r\n")
-		time.sleep(1)
-		print ("Fin del proceso")
+except mysql.connector.Error as err:
+	print("Something went wrong: {}".format(err))
+except (ValueError, NameError, AttributeError):
+	print ("Hay un error al separar o en una variable o un atributo")
+	print ("Borrando sms: " + id_sms_global)
+	serie.write("AT+CMGD=" + id_sms_global + "\r\n")
+	time.sleep(1)
+	print ("Fin del proceso")
 	#Si interrumpo con ctrl c
-	except KeyboardInterrupt:
-		GPIO.cleanup()
-		infinito = False
-		break
-		serie.close()
+except KeyboardInterrupt:
+	GPIO.cleanup()
+	infinito = False
+	break
+	serie.close()
 		#cursor.close()
 		cursor_rpi.close()
 		#cnx.close()
 		cnx_rpi.close()
 		print ("Fin del proceso")
 	#Cuando finalice el ciclo try
-	finally:
-		GPIO.cleanup()
-		print ("Fin del try")
+finally:
+	GPIO.cleanup()
+	print ("Fin del try")
