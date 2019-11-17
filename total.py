@@ -194,11 +194,11 @@ def segundx(numero, fecha_sms, id_sms):
 				#json_response['data']
 				print(json_response)
 				dato+=1
-				if '400' in json_response :
+				if 'fail' in json_response :
 					print("Error en el envio de datos")
 					print("No se borra el mensaje")
 					print("----------------Fin por error de envio-----------")
-					qap=false
+					qap = False
 
 		elif "\r\n" in segunda: 
 			print ("Borrando sms: " + id_sms)
