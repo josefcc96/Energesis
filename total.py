@@ -124,7 +124,7 @@ def primerx():
 	while control:
 		#+CMGL: 9,"REC READ","3003859853","","18/02/19,11:42:55-20"
 		linea = serie.readline()
-		if linea.startswith("b'+CMGL:") is True:
+		if linea.startswith(b"+CMGL:") is True:
 			cm, r, c1, numero, c2, n, c3, fecha, n2 = linea.split('"')
 			cmg, nada = cm.split(",")
 			cmgl, id_sms = cmg.split(" ")
@@ -192,7 +192,7 @@ def segundx(numero, fecha_sms, id_sms):
 				response = requests.post('https://graphql.cclimamagdalena.com/api/v1/houses/simple', data = {'numCasa':id_Guamal[num_Guamal.index(numero)], 'consumption': consumo, 't1': t1,'h1': h1, 't2': t2, 'h2': h2, 't3': t3,'h3': h3, 'date': fecha,'hour':hora})
 				json_response = response.json()
 				json_response['data']
-			elif "\n" in segunda:	
+			elif "\r\n" in segunda:	
 				print ("Borrando sms: " + id_sms)
 				serie.write(str.encode("AT+CMGD=" + id_sms + "\r\n"))
 				time.sleep(1)
