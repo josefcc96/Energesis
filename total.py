@@ -178,9 +178,11 @@ def segundx(numero, fecha_sms, id_sms):
 		print (segunda)
 		if numero in num_Guamal:
 			print("Enviando Primer dato")
+			posi=num_Guamal.index(numero)
 			consumo,t1,h1,t2,h2,t3,h3,t4,h4,fecha,hora,crc=segunda.split(',')
-			print(consumo+"--"+t1+"--"+h1+"--"+t2+"--"+h2+"--"+t3+"--"+h3+"--"+t4+"--"+h4+"--"+fecha+"--"+hora+"--"+crc)
-			response = requests.post('https://graphql.cclimamagdalena.com/api/v1/houses/simple', data = {'numCasa':id_Guamal[num_Guamal.index(numero)], 'consumption': consumo, 't1': t1,'h1': h1, 't2': t2, 'h2': h2, 't3': t3,'h3': h3, 'date': fecha,'hour':hora})
+			print(posi+"--"+consumo+"--"+t1+"--"+h1+"--"+t2+"--"+h2+"--"+t3+"--"+h3+"--"+t4+"--"+h4+"--"+fecha+"--"+hora+"--"+crc)
+			
+			response = requests.post('https://graphql.cclimamagdalena.com/api/v1/houses/simple', data = {'numCasa':id_Guamal[posi], 'consumption': consumo, 't1': t1,'h1': h1, 't2': t2, 'h2': h2, 't3': t3,'h3': h3, 'date': fecha,'hour':hora})
 			# json_response = response.json()
 			# json_response['data']
 			# print(data)
@@ -189,12 +191,15 @@ def segundx(numero, fecha_sms, id_sms):
 			print ("Segunda linea: ")
 			print (segunda)
 			if numero in num_Guamal:
-				print("Enviando Segundo dato")
+				print("Enviando Primer dato")
+				posi=num_Guamal.index(numero)
 				consumo,t1,h1,t2,h2,t3,h3,t4,h4,fecha,hora,crc=segunda.split(',')
-				print(consumo+"--"+t1+"--"+h1+"--"+t2+"--"+h2+"--"+t3+"--"+h3+"--"+t4+"--"+h4+"--"+fecha+"--"+hora+"--"+crc)
-				response = requests.post('https://graphql.cclimamagdalena.com/api/v1/houses/simple', data = {'numCasa':id_Guamal[num_Guamal.index(numero)], 'consumption': consumo, 't1': t1,'h1': h1, 't2': t2, 'h2': h2, 't3': t3,'h3': h3, 'date': fecha,'hour':hora})
+				print(posi+"--"+consumo+"--"+t1+"--"+h1+"--"+t2+"--"+h2+"--"+t3+"--"+h3+"--"+t4+"--"+h4+"--"+fecha+"--"+hora+"--"+crc)
+				
+				response = requests.post('https://graphql.cclimamagdalena.com/api/v1/houses/simple', data = {'numCasa':id_Guamal[posi], 'consumption': consumo, 't1': t1,'h1': h1, 't2': t2, 'h2': h2, 't3': t3,'h3': h3, 'date': fecha,'hour':hora})
 				# json_response = response.json()
 				# json_response['data']
+				# print(data)
 			elif "\r\n" in segunda:	
 				print ("Borrando sms: " + id_sms)
 				serie.write( "AT+CMGD=" + id_sms + "\r\n")
