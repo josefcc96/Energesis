@@ -118,8 +118,8 @@ def primerx():
 	global hora_con
 	global hora_sin
 	hx = time.strftime("%H:%M:%S")
-	print (("Escribiendo cmgl a las: " + hx))
-	serie.write( 'AT+CMGL="ALL"\r\n')
+	print ("Escribiendo cmgl a las: " + hx)
+	serie.write('AT+CMGL="ALL"\r\n')
 	serie.reset_input_buffer()
 	control = True
 	while control:
@@ -143,12 +143,13 @@ def primerx():
 				#hora_sin = otra_fecha(fecha)
 			#consulta_bdd(hora_sin, hora_con)
 			segundx(numero, fecha_sms, id_sms)
-			if  "OK" in linea:
-				control = False
-				if  "ERROR" in linea:
-					control = False
-					print ("-----------------------------------------------------------")
-					print ("FIN")
+
+		if  "OK" in linea:
+			control = False
+		if  "ERROR" in linea:
+			control = False
+			print ("-----------------------------------------------------------")
+	print ("FIN")
 
 
 
@@ -346,11 +347,11 @@ def perro():
 			if contador == 100:
 				print ("Finalizado, reboot")
 				#os.system("sudo reboot")
-				contador = 0
-				time.sleep(3)
+		contador = 0
+		time.sleep(3)
 
-				hilo_perro = threading.Thread(target=perro)
-				hilo_perro.start()
+hilo_perro = threading.Thread(target=perro)
+hilo_perro.start()
 
 #Inicia el ciclo infinito del proyecto
 while True:
@@ -395,7 +396,7 @@ while True:
 					time.sleep(6)
 					inicio()
 					cnt = 0
-					time.sleep(1)
+			time.sleep(1)
 	#Si hay un error de nombre de variable o no se puede dividir algún mensaje
 	except mysql.connector.Error as err:
 		print("Something went wrong: {}".format(err))
