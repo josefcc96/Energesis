@@ -310,7 +310,7 @@ def bdd(idx, sensor, fecha, tipo, valor, bateria, fecha_sms):
 
 
 def hora_now():
-    """Función para entregar la hora actual"""
+	"""Función para entregar la hora actual"""
 	#Obtiene la hora actual
 	hora = time.strftime("%H:%M:%S")
 	#Obtiene la fecha actual
