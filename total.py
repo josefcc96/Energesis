@@ -181,7 +181,7 @@ def segundx(numero, fecha_sms, id_sms):
 		print ("Segunda linea: ")
 		#Imprime lo leido
 		print (segunda)
-		if dato<2: 
+		if dato<2 and "\r\n" not in segunda: 
 			if numero in num_Guamal:
 				print("Enviando dato: "+ str(dato))
 				posi=num_Guamal.index(numero)
