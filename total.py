@@ -198,7 +198,7 @@ def segundx(numero, fecha_sms, id_sms):
 					"h2": float(h2), 
 					"t3": float(t3),
 					"h3": float(h3), 
-					"date":fecha,
+					"date":'"'+fecha+'"',
 					"hour":hora,
 				}
 				print(datos)
