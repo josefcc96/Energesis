@@ -375,7 +375,7 @@ while True:
 		inicio()
 		#Conecta al MySQL de la raspberry
 		cnx_rpi = mysql.connector.connect(user='root', password='Contrasena1',
-			host='127.0.0.1', database='riorancheria')
+			host='127.0.0.1', database='casas')
 		#Crea la variable cursor
 		cursor_rpi = cnx_rpi.cursor()
 		print ("Infinito: " + str(infinito))
