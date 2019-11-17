@@ -187,6 +187,7 @@ def segundx(numero, fecha_sms, id_sms):
 				print("Enviando dato: "+ str(dato))
 				posi=num_Guamal.index(numero)
 				consumo,t1,h1,t2,h2,t3,h3,t4,h4,fecha,hora,crc=segunda.split(',')
+				fecha=fecha_ok(fecha);
 				print(str(posi)+"--"+consumo+"--"+t1+"--"+h1+"--"+t2+"--"+h2+"--"+t3+"--"+h3+"--"+t4+"--"+h4+"--"+fecha+"--"+hora+"--"+crc)
 				datos={
 					"numCasa":int(id_Guamal[posi]),
@@ -197,7 +198,7 @@ def segundx(numero, fecha_sms, id_sms):
 					"h2": float(h2), 
 					"t3": float(t3),
 					"h3": float(h3), 
-					"date":fecha_ok(fecha),
+					"date":fecha,
 					"hour":hora,
 				}
 				print(datos)
