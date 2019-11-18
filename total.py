@@ -150,7 +150,7 @@ def primerx():
 		if  "ERROR" in linea:
 			control = False
 			print ("-----------------------------------------------------------")
-	print ("FIN")
+	#print ("FIN")
 
 
 
@@ -404,7 +404,7 @@ while True:
 		while infinito:
 			ya = time.strftime("%S")
 			if (ya[1] == "0"):
-				print ("Llamando a primerx")
+				#print ("Llamando a primerx")
 				primerx()
 				cnt = cnt + 1
 				if cnt == 100:
