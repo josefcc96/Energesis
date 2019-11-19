@@ -188,20 +188,18 @@ def segundx(numero, fecha_sms, id_sms):
 				posi=num_Guamal.index(numero)
 				consumo,t1,h1,t2,h2,t3,h3,t4,h4,fecha,hora,crc=segunda.split(',')
 				fecha = fecha_ok(fecha);
-				h1=hum(h1)
-				h2=hum(h2)
-				h3=hum(h3)
-				h4=hum(h4)
 				print(fecha)
 				datos={
 					"numCasa":int(id_Guamal[posi]),
 					"consumption": float(consumo), 
 					"t1": float(t1),
-					"h1": float(h1), 
+					"h1": float(hum(h1)), 
 					"t2": float(t2), 
-					"h2": float(h2), 
+					"h2": float(hum(h2)), 
 					"t3": float(t3),
-					"h3": float(h3), 
+					"h3": float(hum(h3)), 
+					"t4": float(t4),
+					"h4": float(hum(h4)), 
 					"date":fecha,
 					"hour":hora,
 				}
@@ -215,10 +213,11 @@ def segundx(numero, fecha_sms, id_sms):
 				if json_response['status']== 'fail' :
 					print("Error en el envio de datos")
 					print("No se borra el mensaje")
-					print("----------------Fin por error de envio-----------")
+					print("----------------Fin por error de envio-----------\n")
 					qap = False
-				elif json_response['status']== '' :
-					
+				elif json_response['status'] == 'success' :
+					print("----------------Envio Correcto de mensaje-----------\n")
+
 		elif "\r\n" in segunda: 
 			print ("Borrando sms: " + id_sms)
 			serie.write( "AT+CMGD=" + id_sms + "\r\n")
