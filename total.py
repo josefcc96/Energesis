@@ -188,6 +188,10 @@ def segundx(numero, fecha_sms, id_sms):
 				posi=num_Guamal.index(numero)
 				consumo,t1,h1,t2,h2,t3,h3,t4,h4,fecha,hora,crc=segunda.split(',')
 				fecha = fecha_ok(fecha);
+				h1=hum(h1)
+				h2=hum(h2)
+				h3=hum(h3)
+				h4=hum(h4)
 				print(fecha)
 				datos={
 					"numCasa":int(id_Guamal[posi]),
@@ -201,7 +205,7 @@ def segundx(numero, fecha_sms, id_sms):
 					"date":fecha,
 					"hour":hora,
 				}
-				print(datos)
+				#print(datos)
 				response = requests.post("https://graphql.cclimamagdalena.com/api/v1/houses/simple", json = datos)
 				#print(response)
 				json_response = response.json()
@@ -213,6 +217,7 @@ def segundx(numero, fecha_sms, id_sms):
 					print("No se borra el mensaje")
 					print("----------------Fin por error de envio-----------")
 					qap = False
+				elif json_response['status']== '' :
 
 		elif "\r\n" in segunda: 
 			print ("Borrando sms: " + id_sms)
@@ -243,29 +248,38 @@ def consulta_bdd(fecha_menor, fecha_mayor):
 		print ("No hay nada en la base de datos")
 
 
+def hum(hume):
+	if hume > 99.0:
+		hume = 99.0
+	
+
+	if hume == 0.0:
+		hume = 99.0
+		
+	return hume
 
 
 
 
-def sendmensaje(receptor, mns=""):
-	"""Función para enviar el mensaje"""
-	serie.write( 'AT\r\n')
-	time.sleep(1)
-	#Le ponemos en modo para SMS
-	serie.write( 'AT+CMGF=1\r\n')
-	time.sleep(1)
-	#Comando para enviar el mensaje, se pasa el valor del número
-	serie.write( 'AT+CMGS=\"' + receptor + '\"\r\n')
-	time.sleep(1)
-	#Se escribe el mensaje
-	serie.write( mns)
-	time.sleep(3)
-	#Termina el menzaje con Ctrl+z
-	serie.write( ascii.ctrl("z"))
-	time.sleep(3)
-	#Le pasamos un fin de linea
-	serie.write( '\r\n')
-	print ("Mensaje enviado\n")
+# def sendmensaje(receptor, mns=""):
+# 	"""Función para enviar el mensaje"""
+# 	serie.write( 'AT\r\n')
+# 	time.sleep(1)
+# 	#Le ponemos en modo para SMS
+# 	serie.write( 'AT+CMGF=1\r\n')
+# 	time.sleep(1)
+# 	#Comando para enviar el mensaje, se pasa el valor del número
+# 	serie.write( 'AT+CMGS=\"' + receptor + '\"\r\n')
+# 	time.sleep(1)
+# 	#Se escribe el mensaje
+# 	serie.write( mns)
+# 	time.sleep(3)
+# 	#Termina el menzaje con Ctrl+z
+# 	serie.write( ascii.ctrl("z"))
+# 	time.sleep(3)
+# 	#Le pasamos un fin de linea
+# 	serie.write( '\r\n')
+# 	print ("Mensaje enviado\n")
 
 
 # def consulta_bdd_nivel(idx, valor1):
@@ -407,7 +421,7 @@ while True:
 				#print ("Llamando a primerx")
 				primerx()
 				cnt = cnt + 1
-				if cnt == 100:
+				if cnt == 200:
 					print ("Apagando el SIM800")
 					GPIO.output(sim, True)
 					time.sleep(1)
