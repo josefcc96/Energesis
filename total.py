@@ -218,7 +218,7 @@ def segundx(numero, fecha_sms, id_sms):
 					print("----------------Fin por error de envio-----------")
 					qap = False
 				elif json_response['status']== '' :
-
+					
 		elif "\r\n" in segunda: 
 			print ("Borrando sms: " + id_sms)
 			serie.write( "AT+CMGD=" + id_sms + "\r\n")
@@ -255,7 +255,7 @@ def hum(hume):
 
 	if hume == 0.0:
 		hume = 99.0
-		
+
 	return hume
 
 
