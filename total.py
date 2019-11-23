@@ -252,12 +252,12 @@ def consulta_bdd(fecha_menor, fecha_mayor):
 def hum(hume):
 	if hume > 99.0:
 		return 99.0
-	else
+	else:
 		return hume
-		
+
 	if hume == 0.0:
 		return 99.0
-	else
+	else:
 		return hume
 
 
