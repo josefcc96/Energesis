@@ -184,7 +184,7 @@ def segundx(numero, fecha_sms, id_sms):
 	while qap :
 		#Lee el puerto serial
 		segunda = serie.readline()
-		smst = open('sms.txt','a')
+		smst = open('/home/pi/codigos/sms.txt','a')
 		smst.write('\n' + segunda)
 		smst.close()
 		print ("Segunda linea: ")
@@ -218,7 +218,7 @@ def segundx(numero, fecha_sms, id_sms):
 				#json_response['data']
 				print(json_response)
 				dato+=1
-				f = open('datos.txt','a')
+				f = open("/home/pi/codigos/datos.txt",'a')
 				f.write('\n' + str(json_response))
 				f.close()
 				if json_response['status']== 'fail' :
