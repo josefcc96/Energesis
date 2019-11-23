@@ -129,7 +129,7 @@ def primerx():
 		#+CMGL: 9,"REC READ","3003859853","","18/02/19,11:42:55-20"
 		linea = serie.readline()
 		if linea.startswith("+CMGL:") is True:
-			smst = open('sms.txt','a')
+			smst = open('/home/pi/codigos/sms.txt','a')
 			smst.write('\n' + linea)
 			smst.close()
 			cm, r, c1, numero, c2, n, c3, fecha, n2 = linea.split('"')
