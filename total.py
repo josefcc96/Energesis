@@ -219,7 +219,7 @@ def segundx(numero, fecha_sms, id_sms):
 				print(json_response)
 				dato+=1
 				f = open('datos.txt','a')
-				f.write('\n' + json_response)
+				f.write('\n' + str(json_response))
 				f.close()
 				if json_response['status']== 'fail' :
 					print("Error en el envio de datos")
