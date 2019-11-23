@@ -19,11 +19,11 @@ import requests
 import json
 
 """------------------------------------CONTROL DE PINES GPIO------------------------------------"""
-idc=["030","031","032","033","034","035","037","080","081","082","083","084","085","087","088","089",
+idc = ["030","031","032","033","034","035","037","080","081","082","083","084","085","087","088","089",
 "040","041","042","043","071","077","090","091","093","103","104","105","108","109","119"
 ]
 
-num=[
+num = [
 "3135881855","3135927486","3135670333","3135646220","3135666599","3135691884","3135885660","3135658864",
 "3135884387","3135660270","3135664037","3135883144","3135658913","3135639957","3135899636","3135642438",
 "3135886941","3135647515","3135881890","3135884424","3135886942","3135886935","3135642457","3135674161",
@@ -184,7 +184,7 @@ def segundx(numero, fecha_sms, id_sms):
 		print ("Segunda linea: ")
 		#Imprime lo leido
 		print (segunda)
-		if dato<2 and "\r\n" not in segunda: 
+		if (dato < 2) and ("\r\n" not in segunda): 
 			if numero in numc:
 				print("Enviando dato: "+ str(dato))
 				posi=numc.index(numero)
@@ -192,7 +192,7 @@ def segundx(numero, fecha_sms, id_sms):
 				fecha = fecha_ok(fecha);
 				print(fecha)
 				datos={
-					"numCasa":int( idc[posi]),
+					"numCasa":int(idc[posi]),
 					"consumption": float(consumo), 
 					"t1": float(t1),
 					"h1": float(hum(h1)), 
@@ -251,14 +251,17 @@ def consulta_bdd(fecha_menor, fecha_mayor):
 
 def hum(hume):
 	if hume > 99.0:
-		hume = 99.0
-	
-
+		return 99.0
+	else
+		return hume
+		
 	if hume == 0.0:
-		hume = 99.0
+		return 99.0
+	else
+		return hume
 
-	return hume
 
+	
 
 
 
