@@ -382,10 +382,9 @@ def fecha_ok(fecha):
 def bdd(datos):
 	"""Función para guardar en la base de datos"""
 
-    agregar = ("INSERT INTO datos ('ID_Casa','COSNSUMO','T1','H1','T2','H2','T3','H3','T4','H4','COSNSUMO','HORA','FECHA') VALUES "
-		"(%s, %s, %s, %s, %s, %s, %s);")
+    agregar = ("INSERT INTO datos ('ID_Casa','COSNSUMO','T1','H1','T2','H2','T3','H3','T4','H4','HORA','FECHA') VALUES (%i, %f, %f, %f, %f, %f, %f, %f, %f, %f, %s, %s);")
 	#Ejecuta el comando agregar con los valores datos en MySQL
-		cursor_rpi.execute(agregar, datos)
+	cursor_rpi.execute(agregar, datos)
 	#Es necesario ejecutar commit para que funcione
 	#cnx.commit()
 	cnx_rpi.commit()
