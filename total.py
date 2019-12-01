@@ -208,7 +208,7 @@ def segundx(numero, fecha_sms, id_sms):
 				fecha = fecha_ok(fecha);
 				print(fecha)
 				
-				bdd(int(idc[posi]),float(consumo),float(t1),hum(h1),float(t2),hum(h2),float(t3),hum(h3),float(t4),hum(h4), str(fecha),str(hora)
+				bdd(int(idc[posi]),float(consumo),float(t1),hum(h1),float(t2),hum(h2),float(t3),hum(h3),float(t4),hum(h4), str(fecha),str(hora))
 				
 				datos={
 					"numCasa":int(idc[posi]),
@@ -313,7 +313,7 @@ def fecha_ok(fecha):
 
 
 def bdd(idcasa,consumo,t1,h1,t2,h2,t3,h3,t4,h4,fecha,hora):
-	datos=(idcasa,consumo,t1,h1,t2,h3,t3,h3,t4,h4,fecha,hora)
+	datos = (idcasa, consumo, t1, h1, t2, h3, t3, h3, t4, h4, fecha, hora)
 	"""Función para guardar en la base de datos"""
 
 	agregar = "INSERT INTO datos (ID_Casa,COSNSUMO,T1,H1,T2,H2,T3,H3,T4,H4,FECHA,HORA) VALUES (%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,\"%s\",\"%s\");"
