@@ -3,7 +3,8 @@
 import serial
 #Importamos la librería de tiempo
 import time
-#Librería de MQTT para publicar
+#Librería de email
+import smtplib
 #Conectar a la base de datos
 import mysql.connector
 #Importa la librería para modificaciones de tiempo
@@ -138,9 +139,9 @@ def primerx():
 		#+CMGL: 9,"REC READ","3003859853","","18/02/19,11:42:55-20"
 		linea = serie.readline()
 		if linea.startswith("+CMGL:") is True:
-			smst = open('/home/pi/codigos/sms.txt','a')
-			smst.write('\n' + linea)
-			smst.close()
+			# smst = open('/home/pi/codigos/sms.txt','a')
+			# smst.write('\n' + linea)
+			# smst.close()
 			cm, r, c1, numero, c2, n, c3, fecha, n2 = linea.split('"')
 			cmg, nada = cm.split(",")
 			cmgl, id_sms = cmg.split(" ")
@@ -221,18 +222,20 @@ def segundx(numero, fecha_sms, id_sms):
 					"hour":hora,
 				}
 				#print(datos)
+				bdd(datos)
 				response = requests.post("https://graphql.cclimamagdalena.com/api/v1/houses/simple", json = datos)
 				#print(response)
 				json_response = response.json()
 				#json_response['data']
 				print(json_response)
-				dato+=1
-				f = open("/home/pi/codigos/datos.txt",'a')
-				f.write('\n' + str(json_response))
-				f.close()
+				# dato+=1
+				# f = open("/home/pi/codigos/datos.txt",'a')
+				# f.write('\n' + str(json_response))
+				# f.close()
 				if json_response['status']== 'fail' :
 					print("Error en el envio de datos")
 					print("No se borra el mensaje")
+					mail("Fallo en el envio de datos","FALLO EN EL ENVIO \n"+str(datos))
 					print("----------------Fin por error de envio-----------\n")
 					qap = False
 				elif json_response['status'] == 'success' :
@@ -275,8 +278,35 @@ def hum(hume):
 	else:
 		return float(hume)
 
+def mail(mensaje, asunto ):
 
+	remitente   = "Servidor <ingenieria.energesis@gmail.com>"
+	destinatario  = "josefcc96@gmail.com"
 	
+
+	'''
+	Preparo el mail y agrego campos
+	'''
+	email = """From: %s 
+	To: %s 
+	MIME-Version: 1.0 
+	Content-type: text/html 
+	Subject: %s 
+	 
+	%s
+	""" % (remitente, destinatario, asunto, mensaje)
+	
+	try:
+ 		smtp = smtplib.SMTP('smtp.gmail.com:587')
+ 		smtp.starttls()
+ 		smtp.login('ingenieria.energesis@gmail.com', 'Energesis1.')
+ 		smtp.sendmail(remitente, destinatario, email)
+ 		smtp.quit()
+	except Exception as e:
+ 		print(e)
+
+
+
 
 
 
@@ -349,14 +379,13 @@ def fecha_ok(fecha):
 
 
 
-def bdd(idx, sensor, fecha, tipo, valor, bateria, fecha_sms):
+def bdd(datos):
 	"""Función para guardar en la base de datos"""
-	datos = (idx, sensor, fecha, tipo, valor, bateria, fecha_sms)
-	agregar = ("INSERT INTO datos (id, sensor, fecha, tipo, valor, bateria, fecha_sms)VALUES "
+
+    agregar = ("INSERT INTO datos ('ID_Casa','COSNSUMO','T1','H1','T2','H2','T3','H3','T4','H4','COSNSUMO','HORA','FECHA') VALUES "
 		"(%s, %s, %s, %s, %s, %s, %s);")
 	#Ejecuta el comando agregar con los valores datos en MySQL
-	#cursor.execute(agregar, datos)
-	cursor_rpi.execute(agregar, datos)
+		cursor_rpi.execute(agregar, datos)
 	#Es necesario ejecutar commit para que funcione
 	#cnx.commit()
 	cnx_rpi.commit()
@@ -398,6 +427,7 @@ def perro():
 			contador = contador + 1
 			time.sleep(3)
 			if contador == 100:
+				mail("REINICIANDO","PERRO GUARDIAN REINICIANDO RPI")
 				print ("Finalizado, reboot")
 				os.system("sudo reboot")
 		contador = 0
