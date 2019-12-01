@@ -194,9 +194,9 @@ def segundx(numero, fecha_sms, id_sms):
 	while qap :
 		#Lee el puerto serial
 		segunda = serie.readline()
-		smst = open('/home/pi/codigos/sms.txt','a')
-		smst.write('\n' + segunda)
-		smst.close()
+		# smst = open('/home/pi/codigos/sms.txt','a')
+		# smst.write('\n' + segunda)
+		# smst.close()
 		print ("Segunda linea: ")
 		#Imprime lo leido
 		print (segunda)
@@ -207,6 +207,9 @@ def segundx(numero, fecha_sms, id_sms):
 				consumo,t1,h1,t2,h2,t3,h3,t4,h4,fecha,hora,crc=segunda.split(',')
 				fecha = fecha_ok(fecha);
 				print(fecha)
+				
+				bdd(int(idc[posi]),float(consumo),float(t1),hum(h1),float(t2),hum(h2),float(t3),hum(h3),float(t4),hum(h4), str(fecha),str(hora)
+				
 				datos={
 					"numCasa":int(idc[posi]),
 					"consumption": float(consumo), 
@@ -222,7 +225,7 @@ def segundx(numero, fecha_sms, id_sms):
 					"hour":hora,
 				}
 				#print(datos)
-				bdd(datos)
+			
 				response = requests.post("https://graphql.cclimamagdalena.com/api/v1/houses/simple", json = datos)
 				#print(response)
 				json_response = response.json()
@@ -250,24 +253,6 @@ def segundx(numero, fecha_sms, id_sms):
 			dato = 0
 
 
-def consulta_bdd(fecha_menor, fecha_mayor):
-	"""Consulta la base de datos entre un intérvalo de fechas"""
-	global hora_con
-	try:
-		if fecha_mayor > fecha_menor:
-			print ("Mandando los datos entre " + fecha_menor + " y " + fecha_mayor)
-			query = ("SELECT * FROM datos WHERE fecha_sms BETWEEN %s AND %s;")
-			datos = (fecha_menor, fecha_mayor)
-			cursor_rpi.execute(query, datos)
-			for (id, sensor, fecha, tipo, valor, bateria, fecha_sms) in cursor_rpi:
-				consulta = ("{} {} {} {} {} {} {}".format(id, sensor,
-					fecha, tipo, valor, bateria, fecha_sms))
-				print (consulta)
-				adecuacion_nueva(consulta)
-				hora_con = "0000-00-00 00:00:00"
-				publish.single("net", "Se fue el net pero ya regresó", hostname="31.220.62.19")
-	except UnboundLocalError:
-		print ("No hay nada en la base de datos")
 
 
 def hum(hume):
@@ -306,6 +291,37 @@ def mail(mensaje, asunto ):
 		print(e)
 
 
+
+
+
+
+
+def fecha_ok(fecha):
+	"""Acomoda la fecha y hora para ser guardada en MySQL"""
+	#Separa los valores de la fecha por /
+	fecha = fecha.split('/')
+	#Guarda en una variable el día, mes y año
+	dia, mes, anio = fecha
+	#Convierte a entero la variable que es un string
+	#Con date convierte el día, mes y año al formato de MySQL
+	fecha = anio+"/"+mes+"/"+dia
+	#Une la fecha y hora para ser guardada en MySQL
+	f_h = str(fecha)
+	return f_h
+
+
+
+
+def bdd(idcasa,consumo,t1,h1,t2,h2,t3,h3,t4,h4,fecha,hora):
+	datos=(idcasa,consumo,t1,h1,t2,h3,t3,h3,t4,h4,fecha,hora)
+	"""Función para guardar en la base de datos"""
+
+	agregar = "INSERT INTO datos (ID_Casa,COSNSUMO,T1,H1,T2,H2,T3,H3,T4,H4,FECHA,HORA) VALUES (%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,\"%s\",\"%s\");"
+	#Ejecuta el comando agregar con los valores datos en MySQL
+	cursor_rpi.execute(agregar, datos)
+	#Es necesario ejecutar commit para que funcione
+	#cnx.commit()
+	cnx_rpi.commit()
 
 
 
@@ -362,33 +378,24 @@ def mail(mensaje, asunto ):
 
 
 
-
-def fecha_ok(fecha):
-	"""Acomoda la fecha y hora para ser guardada en MySQL"""
-	#Separa los valores de la fecha por /
-	fecha = fecha.split('/')
-	#Guarda en una variable el día, mes y año
-	dia, mes, anio = fecha
-	#Convierte a entero la variable que es un string
-	#Con date convierte el día, mes y año al formato de MySQL
-	fecha = anio+"/"+mes+"/"+dia
-	#Une la fecha y hora para ser guardada en MySQL
-	f_h = str(fecha)
-	return f_h
-
-
-
-
-def bdd(datos):
-	"""Función para guardar en la base de datos"""
-
-	agregar = ("INSERT INTO datos (ID_Casa,COSNSUMO,T1,H1,T2,H2,T3,H3,T4,H4,FECHA,HORA) VALUES (%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,\"%s\",\"%s\");")
-	#Ejecuta el comando agregar con los valores datos en MySQL
-	cursor_rpi.execute(agregar, datos)
-	#Es necesario ejecutar commit para que funcione
-	#cnx.commit()
-	cnx_rpi.commit()
-
+def consulta_bdd(fecha_menor, fecha_mayor):
+	"""Consulta la base de datos entre un intérvalo de fechas"""
+	global hora_con
+	try:
+		if fecha_mayor > fecha_menor:
+			print ("Mandando los datos entre " + fecha_menor + " y " + fecha_mayor)
+			query = ("SELECT * FROM datos WHERE fecha_sms BETWEEN %s AND %s;")
+			datos = (fecha_menor, fecha_mayor)
+			cursor_rpi.execute(query, datos)
+			for (id, sensor, fecha, tipo, valor, bateria, fecha_sms) in cursor_rpi:
+				consulta = ("{} {} {} {} {} {} {}".format(id, sensor,
+					fecha, tipo, valor, bateria, fecha_sms))
+				print (consulta)
+				adecuacion_nueva(consulta)
+				hora_con = "0000-00-00 00:00:00"
+				publish.single("net", "Se fue el net pero ya regresó", hostname="31.220.62.19")
+	except UnboundLocalError:
+		print ("No hay nada en la base de datos")
 
 def hora_now():
 	"""Función para entregar la hora actual"""
