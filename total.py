@@ -325,88 +325,6 @@ def bdd(idcasa,consumo,t1,h1,t2,h2,t3,h3,t4,h4,fecha,hora):
 
 
 
-
-# def sendmensaje(receptor, mns=""):
-# 	"""Función para enviar el mensaje"""
-# 	serie.write( 'AT\r\n')
-# 	time.sleep(1)
-# 	#Le ponemos en modo para SMS
-# 	serie.write( 'AT+CMGF=1\r\n')
-# 	time.sleep(1)
-# 	#Comando para enviar el mensaje, se pasa el valor del número
-# 	serie.write( 'AT+CMGS=\"' + receptor + '\"\r\n')
-# 	time.sleep(1)
-# 	#Se escribe el mensaje
-# 	serie.write( mns)
-# 	time.sleep(3)
-# 	#Termina el menzaje con Ctrl+z
-# 	serie.write( ascii.ctrl("z"))
-# 	time.sleep(3)
-# 	#Le pasamos un fin de linea
-# 	serie.write( '\r\n')
-# 	print ("Mensaje enviado\n")
-
-
-# def consulta_bdd_nivel(idx, valor1):
-#   """Consulta la base de datos entre un intérvalo de fechas"""
-#   try:
-#       if idx in id_acequia:
-#           if (int(valor1) < 30) or (int(valor1) > 490):
-#               print ("Buscando los valores del id: " + idx)
-#               query = ("SELECT valor FROM datos WHERE (valor>30) and (valor<490) and (id=" + idx + ");")
-#               cursor_rpi.execute(query)
-#               for (valor) in cursor_rpi:
-#                   consulta = ("{}".format(valor))
-#                   valor_ultimo = consulta[1:4]
-#               print ("El último valor bueno registrado es: " + valor_ultimo)
-#               return valor_ultimo
-#           return valor1
-#       if idx in id_nivel:
-#           if (int(valor1) < 30) or (int(valor1) > 990):
-#               print ("Buscando los valores del id: " + idx)
-#               query = ("SELECT valor FROM datos WHERE (valor>30) and (valor<990) and (id=" + idx + ");")
-#               cursor_rpi.execute(query)
-#               for (valor) in cursor_rpi:
-#                   consulta = ("{}".format(valor))
-#                   valor_ultimo = consulta[1:4]
-#               print ("El último valor bueno registrado es: " + valor_ultimo)
-#               return valor_ultimo
-#           return valor1
-#       return valor1
-#   except UnboundLocalError:
-#       print ("No hay nada en la base de datos")
-
-
-
-def consulta_bdd(fecha_menor, fecha_mayor):
-	"""Consulta la base de datos entre un intérvalo de fechas"""
-	global hora_con
-	try:
-		if fecha_mayor > fecha_menor:
-			print ("Mandando los datos entre " + fecha_menor + " y " + fecha_mayor)
-			query = ("SELECT * FROM datos WHERE fecha_sms BETWEEN %s AND %s;")
-			datos = (fecha_menor, fecha_mayor)
-			cursor_rpi.execute(query, datos)
-			for (id, sensor, fecha, tipo, valor, bateria, fecha_sms) in cursor_rpi:
-				consulta = ("{} {} {} {} {} {} {}".format(id, sensor,
-					fecha, tipo, valor, bateria, fecha_sms))
-				print (consulta)
-				adecuacion_nueva(consulta)
-				hora_con = "0000-00-00 00:00:00"
-				publish.single("net", "Se fue el net pero ya regresó", hostname="31.220.62.19")
-	except UnboundLocalError:
-		print ("No hay nada en la base de datos")
-
-def hora_now():
-	"""Función para entregar la hora actual"""
-	#Obtiene la hora actual
-	hora = time.strftime("%H:%M:%S")
-	#Obtiene la fecha actual
-	fecha = time.strftime("%Y-%m-%d")
-	fecha_total = fecha + " " + hora
-	return fecha_total
-
-
 global infinito
 infinito = True
 global id_sms_global
@@ -511,3 +429,97 @@ while True:
 	finally:
 		GPIO.cleanup()	
 		print ("Fin del try")
+
+
+
+
+
+
+
+
+
+
+#Final del codigo 
+
+
+
+
+# def sendmensaje(receptor, mns=""):
+# 	"""Función para enviar el mensaje"""
+# 	serie.write( 'AT\r\n')
+# 	time.sleep(1)
+# 	#Le ponemos en modo para SMS
+# 	serie.write( 'AT+CMGF=1\r\n')
+# 	time.sleep(1)
+# 	#Comando para enviar el mensaje, se pasa el valor del número
+# 	serie.write( 'AT+CMGS=\"' + receptor + '\"\r\n')
+# 	time.sleep(1)
+# 	#Se escribe el mensaje
+# 	serie.write( mns)
+# 	time.sleep(3)
+# 	#Termina el menzaje con Ctrl+z
+# 	serie.write( ascii.ctrl("z"))
+# 	time.sleep(3)
+# 	#Le pasamos un fin de linea
+# 	serie.write( '\r\n')
+# 	print ("Mensaje enviado\n")
+
+
+# def consulta_bdd_nivel(idx, valor1):
+#   """Consulta la base de datos entre un intérvalo de fechas"""
+#   try:
+#       if idx in id_acequia:
+#           if (int(valor1) < 30) or (int(valor1) > 490):
+#               print ("Buscando los valores del id: " + idx)
+#               query = ("SELECT valor FROM datos WHERE (valor>30) and (valor<490) and (id=" + idx + ");")
+#               cursor_rpi.execute(query)
+#               for (valor) in cursor_rpi:
+#                   consulta = ("{}".format(valor))
+#                   valor_ultimo = consulta[1:4]
+#               print ("El último valor bueno registrado es: " + valor_ultimo)
+#               return valor_ultimo
+#           return valor1
+#       if idx in id_nivel:
+#           if (int(valor1) < 30) or (int(valor1) > 990):
+#               print ("Buscando los valores del id: " + idx)
+#               query = ("SELECT valor FROM datos WHERE (valor>30) and (valor<990) and (id=" + idx + ");")
+#               cursor_rpi.execute(query)
+#               for (valor) in cursor_rpi:
+#                   consulta = ("{}".format(valor))
+#                   valor_ultimo = consulta[1:4]
+#               print ("El último valor bueno registrado es: " + valor_ultimo)
+#               return valor_ultimo
+#           return valor1
+#       return valor1
+#   except UnboundLocalError:
+#       print ("No hay nada en la base de datos")
+
+
+
+# def consulta_bdd(fecha_menor, fecha_mayor):
+# 	"""Consulta la base de datos entre un intérvalo de fechas"""
+# 	global hora_con
+# 	try:
+# 		if fecha_mayor > fecha_menor:
+# 			print ("Mandando los datos entre " + fecha_menor + " y " + fecha_mayor)
+# 			query = ("SELECT * FROM datos WHERE fecha_sms BETWEEN %s AND %s;")
+# 			datos = (fecha_menor, fecha_mayor)
+# 			cursor_rpi.execute(query, datos)
+# 			for (id, sensor, fecha, tipo, valor, bateria, fecha_sms) in cursor_rpi:
+# 				consulta = ("{} {} {} {} {} {} {}".format(id, sensor,
+# 					fecha, tipo, valor, bateria, fecha_sms))
+# 				print (consulta)
+# 				adecuacion_nueva(consulta)
+# 				hora_con = "0000-00-00 00:00:00"
+# 				publish.single("net", "Se fue el net pero ya regresó", hostname="31.220.62.19")
+# 	except UnboundLocalError:
+# 		print ("No hay nada en la base de datos")
+
+# def hora_now():
+# 	"""Función para entregar la hora actual"""
+# 	#Obtiene la hora actual
+# 	hora = time.strftime("%H:%M:%S")
+# 	#Obtiene la fecha actual
+# 	fecha = time.strftime("%Y-%m-%d")
+# 	fecha_total = fecha + " " + hora
+# 	return fecha_total
