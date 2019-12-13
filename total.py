@@ -262,8 +262,8 @@ def hum(hume):
 
 def mail(mensaje, asunto ):
 
-	remitente   = "Servidor <ingenieria.energesis@gmail.com>"
-	destinatario  = "josefcc96@gmail.com"
+	remitente = "Servidor <ingenieria.energesis@gmail.com>"
+	destinatario = "josefcc96@gmail.com"
 	
 
 	'''
