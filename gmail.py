@@ -48,5 +48,5 @@ def mail(mensaje, asunto ):
 
 
 
-	mail("Prueba","prueba")
-	print("Enviando")
+mail("Prueba","prueba")
+print("Enviando")
