@@ -28,3 +28,4 @@ def mail(mensaje, asunto ):
 
 
 	mail("Prueba","prueba")
+	print("Enviando")
