@@ -1,3 +1,24 @@
+# -*- coding: utf-8 -*-
+#Importamos la librería serial
+import serial
+#Importamos la librería de tiempo
+import time
+#Librería de email
+import smtplib
+#Conectar a la base de datos
+import mysql.connector
+#Importa la librería para modificaciones de tiempo
+from datetime import date
+#Librería para usar los pines GPIO
+import RPi.GPIO as GPIO
+#Importamos la librería de ascii para el control z
+from curses import ascii
+import os
+#Importamos la librería que nos permite manejar varios hilos
+import threading
+import requests
+import json
+
 def mail(mensaje, asunto ):
 
 	remitente = "Servidor <ingenieria.energesis@gmail.com>"
