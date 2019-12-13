@@ -74,12 +74,6 @@ def inicio():
 
 	
 def conex():
-	"""Determina si el módulo GSM esta funcionando 
-	   Manda AT, si el módulo no responde ok cierra el ciclo infinito
-	   Y abre el ciclo infinito para todos los procesos, de no ser así vuelve a
-	   empieza a mandar el ok y empieza a contar hasta 3, si llega a 3 sin tener
-	   una respuesta de Ok, entonces me manda un correo"""
-	#Variable que controla el ciclo infinito
 	mal = True
 	#Variable que cuenta los errores
 	contador = 0
