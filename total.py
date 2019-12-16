@@ -49,7 +49,7 @@ numc = [
 #Inicia la comunicación serial por el puerto ttyS0 a 38400
 #Con ls -l /dev puedo saber cuál es el puerto serial 0 o 1
 #Se usa esta velocidad porque no falla el módulo
-print ("Iniciando la comunicación con el serial")
+print("Iniciando la comunicación con el serial")
 serie = serial.Serial("/dev/ttyS0", 38400)
 #Se cierra el puerto por si había otra comunicación
 serie.close()
