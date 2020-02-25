@@ -24,10 +24,6 @@ def mail(mensaje, asunto ):
 	remitente = "Servidor <ingenieria.energesis@gmail.com>"
 	destinatario = "josefcc96@gmail.com"
 	
-
-	'''
-	Preparo el mail y agrego campos
-	'''
 	email = """From: %s 
 	To: %s 
 	MIME-Version: 1.0 
