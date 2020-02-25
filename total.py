@@ -143,9 +143,9 @@ def primerx():
 		#+CMGL: 9,"REC READ","3003859853","","18/02/19,11:42:55-20"
 		linea = serie.readline()
 		if linea.startswith("+CMGL:") is True:
-			# smst = open('/home/pi/codigos/sms.txt','a')
-			# smst.write('\n' + linea)
-			# smst.close()
+			smst = open('/home/pi/codigos/sms.txt','a')
+			smst.write('\n' + linea)
+			smst.close()
 			cm, r, c1, numero, c2, n, c3, fecha, n2 = linea.split('"')
 			cmg, nada = cm.split(",")
 			cmgl, id_sms = cmg.split(" ")
@@ -198,9 +198,9 @@ def segundx(numero, fecha_sms, id_sms):
 	while qap :
 		#Lee el puerto serial
 		segunda = serie.readline()
-		# smst = open('/home/pi/codigos/sms.txt','a')
-		# smst.write('\n' + segunda)
-		# smst.close()
+		smst = open('/home/pi/codigos/sms.txt','a')
+		smst.write('\n' + segunda)
+		smst.close()
 		print ("Segunda linea: ")
 		#Imprime lo leido
 		print (segunda)
@@ -236,9 +236,9 @@ def segundx(numero, fecha_sms, id_sms):
 				#json_response['data']
 				print(json_response)
 				# dato+=1
-				# f = open("/home/pi/codigos/datos.txt",'a')
-				# f.write('\n' + str(json_response))
-				# f.close()
+				f = open("/home/pi/codigos/datos.txt",'a')
+				f.write('\n' + str(json_response))
+				f.close()
 				if json_response['status']== 'fail' :
 					print("Error en el envio de datos")
 					print("No se borra el mensaje")
