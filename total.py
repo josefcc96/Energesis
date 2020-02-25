@@ -228,14 +228,14 @@ def segundx(numero, fecha_sms, id_sms):
 					"date":fecha,
 					"hour":hora,
 				}
-				#print(datos)
+				print(datos)
 			
 				response = requests.post("https://graphql.cclimamagdalena.com/api/v1/houses/simple", json = datos)
 				#print(response)
 				json_response = response.json()
 				#json_response['data']
 				print(json_response)
-				# dato+=1
+				dato+=1
 				# f = open("/home/pi/codigos/datos.txt",'a')
 				# f.write('\n' + str(json_response))
 				# f.close()
